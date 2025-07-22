@@ -8,7 +8,7 @@ export default {
 	getCaptch() {
 		// return import.meta.env.VITE_APP_PROXY_PREFIX + '/core/captcha?' + Date.parse(new Date().toString())
 		return request({
-			url: '/core/captcha',
+			url: '/admin/auth/captcha',
 			method: 'get',
 		})
 	},

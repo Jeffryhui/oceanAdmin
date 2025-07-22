@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1f054b617c596de52ea57ce166b7c9a9",
+    "content-hash": "49c405a76f0edffde0dffb875254fa6b",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -428,6 +428,73 @@
                 }
             ],
             "time": "2023-06-01T07:04:22+00:00"
+        },
+        {
+            "name": "ella123/hyperf-captcha",
+            "version": "3.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WenKaiYang/hyperf-captcha.git",
+                "reference": "60e5e460ffaecec46ad552eb29413f381fb20c26"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WenKaiYang/hyperf-captcha/zipball/60e5e460ffaecec46ad552eb29413f381fb20c26",
+                "reference": "60e5e460ffaecec46ad552eb29413f381fb20c26",
+                "shasum": ""
+            },
+            "require": {
+                "hyperf/cache": "~3.1.0",
+                "hyperf/di": "~3.1.0",
+                "hyperf/event": "~3.1.0",
+                "hyperf/framework": "~3.1.0",
+                "hyperf/validation": "^3.1",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.0",
+                "mockery/mockery": "^1.0",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^10.0",
+                "swoole/ide-helper": "dev-master"
+            },
+            "suggest": {
+                "ext-gd": "Required to use GD",
+                "ext-json": "Required to use JSON.",
+                "ext-openssl": "Required to use HTTPS.",
+                "ext-pdo": "Required to use MySQL Client.",
+                "ext-pdo_mysql": "Required to use MySQL Client.",
+                "ext-redis": "Required to use Redis Client.",
+                "swow/swow": "Required to create swow components."
+            },
+            "type": "library",
+            "extra": {
+                "hyperf": {
+                    "config": "Ella123\\HyperfCaptcha\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Functions.php"
+                ],
+                "psr-4": {
+                    "Ella123\\HyperfCaptcha\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "hyperf captcha",
+            "keywords": [
+                "hyperf",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/WenKaiYang/hyperf-captcha/issues",
+                "source": "https://github.com/WenKaiYang/hyperf-captcha/tree/3.12"
+            },
+            "time": "2025-01-05T07:30:53+00:00"
         },
         {
             "name": "fig/http-message-util",

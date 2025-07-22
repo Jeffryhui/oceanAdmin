@@ -15,17 +15,16 @@ const loading = ref(false)
 
 let isDevelop = import.meta.env.VITE_APP_ENV === 'development'
 
-var odata = isDevelop ? { username: 'admin', password: '123456', code: '' } : { username: '', password: '', code: '' }
+var odata = isDevelop ? { username: 'admin', password: '123456', code: '',key: '' } : { username: '', password: '', code: '',key: '' }
 
 const form = reactive(odata)
 
 const refreshCaptcha = () => {
   form.code = ''
-  form.uuid = ''
   loginApi.getCaptch().then((res) => {
     if (res.code === 200) {
-      captcha.value = res.data.image
-      form.uuid = res.data.uuid
+      captcha.value = res.data.img
+      form.key = res.data.key
     }
   })
 }
@@ -63,24 +62,24 @@ const handleSubmit = async ({ values, errors }) => {
     <div class="login-width md:w-10/12 w-11/12 mx-auto flex justify-between h-full items-center">
       <div class="w-6/12 mx-auto left-panel rounded-l pl-5 pr-5 hidden md:block">
         <div class="logo">
-          <span>{{ $title }} v{{ packageJson.version }}</span>
+          <span>{{ $title }}</span>
         </div>
         <div class="slogan flex justify-end">
-          <span>---- {{ $t('sys.login.slogan') }}</span>
+          <span>开箱即用高性能后台管理系统</span>
         </div>
       </div>
 
       <div class="md:w-6/12 w-11/12 md:rounded-r mx-auto pl-5 pr-5 pb-10">
-        <h2 class="mt-10 text-3xl pb-0 mb-10 login-title">{{ $t('sys.login.title') }}</h2>
+        <h2 class="mt-10 text-3xl pb-0 mb-10 login-title">账户登录</h2>
         <a-form :model="form" @submit="handleSubmit">
-          <a-form-item field="username" :hide-label="true" :rules="[{ required: true, message: $t('sys.login.usernameNotice') }]">
-            <a-input v-model="form.username" class="w-full" size="large" :placeholder="$t('sys.login.username')" allow-clear>
+          <a-form-item field="username" :hide-label="true" :rules="[{ required: true, message: '请输入用户名' }]">
+            <a-input v-model="form.username" class="w-full" size="large" placeholder="请输入用户名" allow-clear>
               <template #prefix><icon-user /></template>
             </a-input>
           </a-form-item>
 
-          <a-form-item field="password" :hide-label="true" :rules="[{ required: true, message: $t('sys.login.passwordNotice') }]">
-            <a-input-password v-model="form.password" :placeholder="$t('sys.login.password')" size="large" allow-clear>
+          <a-form-item field="password" :hide-label="true" :rules="[{ required: true, message: '请输入密码' }]">
+            <a-input-password v-model="form.password" placeholder="请输入密码" size="large" allow-clear>
               <template #prefix><icon-lock /></template>
             </a-input-password>
           </a-form-item>
@@ -91,11 +90,10 @@ const handleSubmit = async ({ values, errors }) => {
             :rules="[
               {
                 required: true,
-                match: /^[a-zA-Z0-9]{4}$/,
-                message: $t('sys.login.verifyCodeNotice'),
+                message: '请输入验证码',
               },
             ]">
-            <a-input v-model="form.code" :placeholder="$t('sys.login.verifyCode')" size="large" allow-clear>
+            <a-input v-model="form.code" placeholder="请输入验证码" size="large" allow-clear>
               <template #prefix><icon-safe /></template>
               <template #append>
                 <img :src="captcha" style="height: 120px; height: 36px; cursor: pointer" @click="refreshCaptcha" />
@@ -105,17 +103,9 @@ const handleSubmit = async ({ values, errors }) => {
 
           <a-form-item :hide-label="true" class="mt-5">
             <a-button html-type="submit" type="primary" long size="large" :loading="loading">
-              {{ $t('sys.login.loginBtn') }}
+              登录
             </a-button>
           </a-form-item>
-
-          <a-divider orientation="center">{{ $t('sys.login.otherLoginType') }}</a-divider>
-          <div class="flex w-3/4 pt-2 mx-auto items-stretch justify-around">
-            <a-avatar class="other-login wechat"><icon-wechat /></a-avatar>
-            <a-avatar class="other-login alipay"><icon-alipay-circle /></a-avatar>
-            <a-avatar class="other-login qq"><icon-qq /></a-avatar>
-            <a-avatar class="other-login weibo"><icon-weibo /></a-avatar>
-          </div>
         </a-form>
       </div>
     </div>
