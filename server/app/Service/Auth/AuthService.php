@@ -7,7 +7,10 @@ use App\Model\Permission\SystemUser;
 use App\Service\Permission\MenuService;
 use Carbon\Carbon;
 use HyperfExtension\Hashing\Hash;
+
+use function Ella123\HyperfCaptcha\captcha_verify;
 use function FriendsOfHyperf\Helpers\get_client_ip;
+use function Hyperf\Support\env;
 
 class AuthService
 {
@@ -20,6 +23,13 @@ class AuthService
      */
     public function login(array $data)
     {
+        // 正式环境必须验证验证码
+        if(env('APP_ENV') == 'prod'){
+            $captchaResult = captcha_verify($data['code'],$data['key']);
+            if(!$captchaResult){
+                throw new BusinessException('验证码错误');
+            }
+        }
         /**
          * @var SystemUser $user
          */
