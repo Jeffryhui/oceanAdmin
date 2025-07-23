@@ -25,17 +25,7 @@ export default {
     })
   },
 
-  /**
-   * 获取公告列表
-   * @returns
-   */
-  getNoticeList(params = {}) {
-    return request({
-      url: '/core/system/notice',
-      method: 'get',
-      params
-    })
-  },
+
 
   /**
    * 获取基础统计
@@ -43,7 +33,7 @@ export default {
    */
   getStatistics(params = {}) {
     return request({
-      url: '/core/system/statistics',
+      url: '/admin/statistics/dashboard',
       method: 'get',
       params
     })
@@ -55,7 +45,7 @@ export default {
    */
   loginChart(params = {}) {
     return request({
-      url: '/core/system/loginChart',
+      url: '/admin/statistics/login-chart',
       method: 'get',
       params
     })
@@ -177,7 +167,7 @@ export default {
    */
   dictAll() {
     return request({
-      url: '/core/system/dictAll',
+      url: '/admin/dict/all',
       method: 'get'
     })
   },

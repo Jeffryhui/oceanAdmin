@@ -20,7 +20,7 @@ export default {
 	 */
 	login(params = {}) {
 		return request({
-			url: '/core/login',
+			url: '/admin/auth/login',
 			method: 'post',
 			data: params,
 		})
@@ -33,7 +33,7 @@ export default {
 	 */
 	logout(params = {}) {
 		return request({
-			url: '/core/logout',
+			url: '/admin/auth/logout',
 			method: 'post',
 			data: params,
 		})
@@ -46,7 +46,7 @@ export default {
 	 */
 	getInfo(params = {}) {
 		return request({
-			url: '/core/system/user',
+			url: '/admin/auth/user-info',
 			method: 'get',
 			data: params,
 		})

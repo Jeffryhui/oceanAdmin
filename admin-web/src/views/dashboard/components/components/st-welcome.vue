@@ -11,8 +11,7 @@
         <div class="pl-3 mt-2">
           <div class="content-block-title">{{ userStore.user.nickname || userStore.user.username }}，欢迎回来！</div>
           <div class="leading-5 mt-2">
-            <a-tag class="tag-primary">免费开源、可商用</a-tag>
-            欢迎使用SaiAdmin后台权限管理系统。喜欢的请去点个 ⭐Star，谢谢！
+            生活不会因为你抱怨而变得更好，但因为你的坚持和努力，它一定会悄悄给你惊喜。别让暂时的困难，蒙住你前进的双眼。相信自己，每一天都是新的开始，每一步都值得被鼓励。
           </div>
         </div>
       </div>

@@ -8,6 +8,8 @@ use App\Model\Model;
 use Qbhy\HyperfAuth\AuthAbility;
 use Qbhy\HyperfAuth\Authenticatable;
 
+use function Hyperf\Support\env;
+
 /**
  * @property int $id 
  * @property string $username 
@@ -52,4 +54,15 @@ class SystemUser extends Model implements Authenticatable
 
     const DEFAULT_DASHBOARD = 'statistics';
     const DEFAULT_AVATAR = '/images/avatar.png';
+
+    const SUPER_ADMIN_ID = 1;
+    const SUPER_ADMIN_USERNAME = 'admin';
+
+    public function getAvatarAttribute($value)
+    {
+        if(empty($value)){
+            return null;
+        }
+        return env('APP_URL', 'http://localhost:9501').$value;
+    }
 }
