@@ -37,5 +37,8 @@ class OperateLog extends Model
             'type' => 'date',
             "format" => "yyyy-MM-dd HH:mm:ss||strict_date_optional_time||epoch_millis"
         ],
+        'operate_time' => [
+            'type' => 'integer'
+        ]
     ];
 }

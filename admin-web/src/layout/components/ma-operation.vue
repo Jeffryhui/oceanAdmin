@@ -1,13 +1,6 @@
 <template>
   <div class="mr-2 flex justify-end lg:justify-between w-full lg:w-auto">
     <a-space class="mr-0 lg:mr-5" size="medium">
-      <a-tooltip :content="$t('sys.store')" v-if="isDev">
-        <a-button :shape="'circle'" class="hidden lg:inline" @click="handleAppStore">
-          <template #icon>
-            <icon-apps :size="16" :rotate="45" />
-          </template>
-        </a-button>
-      </a-tooltip>
 
       <a-tooltip :content="$t('sys.search')">
         <a-button :shape="'circle'" @click="() => (appStore.searchOpen = true)" class="hidden lg:inline">
@@ -83,29 +76,26 @@ import { useAppStore, useUserStore, useMessageStore } from '@/store'
 import tool from '@/utils/tool'
 import MessageNotification from './components/message-notification.vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { Message } from '@arco-design/web-vue'
 import { Push } from '@/utils/push-vue'
 import { info } from '@/utils/common'
 import commonApi from '@/api/common'
 
-const { t } = useI18n()
 const messageStore = useMessageStore()
 const userStore = useUserStore()
 const appStore = useAppStore()
-const setting = ref(null)
 const router = useRouter()
 const isFullScreen = ref(false)
 const showLogoutModal = ref(false)
-const isDev = ref(import.meta.env.DEV)
 const handleSelect = async (name) => {
   if (name === 'userCenter') {
     router.push({ name: 'userCenter' })
   }
   if (name === 'clearCache') {
-    const res = await commonApi.clearAllCache()
-    tool.local.remove('dictData')
-    res.code === 200 && Message.success(res.message)
+    Message.success('清除成功')
+    // const res = await commonApi.clearAllCache()
+    // tool.local.remove('dictData')
+    // res.code === 200 && Message.success(res.message)
   }
   if (name === 'logout') {
     showLogoutModal.value = true
@@ -113,9 +103,7 @@ const handleSelect = async (name) => {
   }
 }
 
-const handleAppStore = async () => {
-  window.open('https://saas.saithink.top/#/appStore')
-}
+
 
 const handleLogout = async () => {
   await userStore.logout()

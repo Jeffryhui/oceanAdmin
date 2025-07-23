@@ -63,6 +63,9 @@ class SystemUser extends Model implements Authenticatable
         if(empty($value)){
             return null;
         }
+        if(str_starts_with($value,'http')){
+            return $value;
+        }
         return env('APP_URL', 'http://localhost:9501').$value;
     }
 }

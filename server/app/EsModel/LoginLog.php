@@ -34,6 +34,9 @@ class LoginLog extends Model
             'type' => 'date',
             "format" => "yyyy-MM-dd HH:mm:ss||strict_date_optional_time||epoch_millis"
         ],
+        'create_time' => [
+            'type' => 'integer'
+        ]
     ];
 
     const STATUS_SUCCESS = 1;

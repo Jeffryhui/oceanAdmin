@@ -34,7 +34,7 @@
   })
 
   const modifyInfo = async (data) => {
-    data.values.avatar = userStore.user.avatar
+    // data.values.avatar = userStore.user.avatar
     const response = await user.updateInfo(data.values)
     if (response.code === 200) {
       Message.success(response.message)

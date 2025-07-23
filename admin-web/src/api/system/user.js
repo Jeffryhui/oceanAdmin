@@ -114,7 +114,7 @@ export default {
    */
   updateInfo(data = {}) {
     return request({
-      url: '/core/user/updateInfo',
+      url: '/admin/system-user/update-info',
       method: 'post',
       data
     })
@@ -129,6 +129,20 @@ export default {
       url: '/core/user/modifyPassword',
       method: 'post',
       data
+    })
+  },
+  getUserLoginLog(params = {}) {
+    return request({
+      url: '/admin/system-user/login-log',
+      method: 'get',
+      params
+    })
+  },
+  getUserOperationLog(params = {}) {
+    return request({
+      url: '/admin/system-user/operate-log',
+      method: 'get',
+      params
     })
   }
 }

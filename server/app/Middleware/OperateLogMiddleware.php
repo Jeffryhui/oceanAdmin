@@ -58,6 +58,7 @@ class OperateLogMiddleware implements MiddlewareInterface
             'request_data' => json_encode($requestData),
             'remark' => sprintf('完整url: %s,请求参数: %s', $request->getUri()->getPath(), json_encode($requestData)),
             'create_time' => date('Y-m-d H:i:s'),
+            'operate_time' => time(),
         ];
         OperateLog::query()->create($data);
         return $handler->handle($request);

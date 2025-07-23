@@ -54,7 +54,7 @@ import { ref, reactive, onMounted, watch } from 'vue'
 import { useUserStore } from '@/store'
 import { Message } from '@arco-design/web-vue'
 import user from '@/api/system/user'
-import commonApi from '@/api/common'
+import userApi from '@/api/system/user'
 
 import ModifyPassword from './components/modifyPassword.vue'
 import UserInfomation from './components/userInfomation.vue'
@@ -72,11 +72,11 @@ const requestParams = reactive({
 })
 
 onMounted(() => {
-  commonApi.getLoginLogList(Object.assign(requestParams, { orderBy: 'login_time', orderType: 'desc' })).then((res) => {
+  userApi.getUserLoginLog(Object.assign(requestParams, { page: 1})).then((res) => {
     loginLogList.value = res.data.data
   })
 
-  commonApi.getOperationLogList(Object.assign(requestParams, { orderBy: 'create_time', orderType: 'desc' })).then((res) => {
+  userApi.getUserOperationLog(Object.assign(requestParams, { page: 1 })).then((res) => {
     operationLogList.value = res.data.data
   })
 })

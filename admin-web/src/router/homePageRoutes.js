@@ -20,15 +20,6 @@ const homePageRoutes = [
     },
     component: () => import('@/views/dashboard/userCenter/index.vue')
   },
-  {
-    name: 'appStore',
-    path: 'https://saas.saithink.top/#/appStore',
-    meta: {
-      title: '插件市场',
-      icon: 'icon-apps',
-      type: 'L'
-    }
-  }
 ]
 
 export const homePage = {

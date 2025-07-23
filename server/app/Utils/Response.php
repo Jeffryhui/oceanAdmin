@@ -4,6 +4,7 @@ namespace App\Utils;
 
 use Hyperf\Context\ApplicationContext;
 use Hyperf\HttpServer\Contract\ResponseInterface;
+use Hyperf\Paginator\Paginator;
 
 class Response
 {

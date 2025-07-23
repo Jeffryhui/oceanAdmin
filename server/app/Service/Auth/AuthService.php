@@ -40,6 +40,7 @@ class AuthService
             'status' => $status,
             'message' => $message,
             'login_time' => date('Y-m-d H:i:s'),
+            'create_time' => time(),
         ];
         $res = LoginLog::query()->create($data);
         return $res;
@@ -116,7 +117,7 @@ class AuthService
      */
     public function userInfo()
     {
-        $user = $this->loginUser(['id','username','nickname','avatar','email','phone','status','signed','dashboard','backend_setting','remark','login_ip','login_time','created_at']);
+        $user = $this->loginUser(['id','username','nickname','avatar','avatar_url','email','phone','status','signed','dashboard','backend_setting','remark','login_ip','login_time','created_at']);
         $menus = $this->menuService->getUserMenus();
         $data = [
             'codes' => ['*'], // TODO 从数据库查询用户对应的权限码
