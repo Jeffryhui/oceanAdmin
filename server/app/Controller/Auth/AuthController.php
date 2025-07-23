@@ -26,7 +26,7 @@ class AuthController extends BaseController
      * @return ResponseInterface
      */
     #[PostMapping(path: 'login')]
-    #[Permission( 'admin:auth:login',  '后台登录',true)]
+    #[Permission( 'admin:auth:login',  '后台登录',true,false)]
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
@@ -40,7 +40,7 @@ class AuthController extends BaseController
      * @return ResponseInterface
      */
     #[GetMapping(path: 'user-info')]
-    #[Permission( 'admin:auth:user-info',  '获取后台用户信息',true)]
+    #[Permission( 'admin:auth:user-info',  '获取后台用户信息',true,true)]
     #[Auth('admin')]
     public function userInfo()
     {
@@ -54,7 +54,7 @@ class AuthController extends BaseController
      * @return ResponseInterface
      */
     #[PostMapping(path: 'logout')]
-    #[Permission( 'admin:auth:logout',  '退出登录',true)]
+    #[Permission( 'admin:auth:logout',  '退出登录',true,true)]
     #[Auth('admin')]
     public function logout()
     {

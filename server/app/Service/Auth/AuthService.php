@@ -2,9 +2,12 @@
 
 namespace App\Service\Auth;
 
+use App\EsModel\LoginLog;
 use App\Exception\BusinessException;
 use App\Model\Permission\SystemUser;
 use App\Service\Permission\MenuService;
+use App\Utils\IpLocationUtils;
+use App\Utils\ServerInfo;
 use Carbon\Carbon;
 use HyperfExtension\Hashing\Hash;
 
@@ -14,8 +17,33 @@ use function Hyperf\Support\env;
 
 class AuthService
 {
-    public function __construct(private MenuService $menuService){}
+    public function __construct(private MenuService $menuService,private IpLocationUtils $ipLocationUtils){}
 
+
+    /**
+     * 登录日志
+     * @param string $username
+     * @param int $status
+     * @param string $message
+     * @return 
+     */
+    public function loginLog($username,$status = 1,$message = '登录成功')
+    {
+        $browser = ServerInfo::browser();
+        $os = ServerInfo::os();
+        $data = [
+            'username' => $username,
+            'ip' => get_client_ip(),
+            'ip_location' => $this->ipLocationUtils->getSimpleLocation(get_client_ip()),
+            'browser' => $browser['full'],
+            'os' => $os['full'],
+            'status' => $status,
+            'message' => $message,
+            'login_time' => date('Y-m-d H:i:s'),
+        ];
+        $res = LoginLog::query()->create($data);
+        return $res;
+    }
     /**
      * 后台用户登录
      * @param array $data
@@ -35,16 +63,20 @@ class AuthService
          */
         $user = SystemUser::where('username', $data['username'])->first();
         if (!$user) {
+            $this->loginLog($data['username'],LoginLog::STATUS_FAIL,'账户不存在');
             throw new BusinessException('用户名或密码错误');
         }
         if ($user->status == SystemUser::STATUS_DISABLE) {
+            $this->loginLog($data['username'],LoginLog::STATUS_FAIL,'账户已禁用');
             throw new BusinessException('用户已禁用');
         }
         if (!Hash::check($data['password'], $user->password)) {
+            $this->loginLog($data['username'],LoginLog::STATUS_FAIL,'密码错误');
             throw new BusinessException('用户名或密码错误');
         }
         $token = auth('admin')->login($user);
         if (!$token) {
+            $this->loginLog($data['username'],LoginLog::STATUS_FAIL,'Token获取失败');
             throw new BusinessException('登录失败,请稍后重试');
         }
         $res = $user->update([
@@ -52,8 +84,10 @@ class AuthService
             'login_time' => Carbon::now(),
         ]);
         if (!$res) {
+            $this->loginLog($data['username'],LoginLog::STATUS_FAIL,'更新登录信息失败');
             throw new BusinessException('登录失败,请稍后重试');
         }
+        $this->loginLog($data['username'],LoginLog::STATUS_SUCCESS,'登录成功');
         return $token;
     }
 

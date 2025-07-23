@@ -13,6 +13,7 @@ class Permission extends AbstractAnnotation
         public string $code,
         public string $description = '',
         public bool $isWhite = false,
+        public bool $isAuth = true,
     ) {
     }
 }

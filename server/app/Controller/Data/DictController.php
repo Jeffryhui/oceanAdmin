@@ -13,7 +13,7 @@ use Qbhy\HyperfAuth\Annotation\Auth;
 class DictController extends BaseController
 {
     #[GetMapping(path: 'all')]
-    #[Permission( 'admin:dict:all',  '获取所有字典',true)]
+    #[Permission( 'admin:dict:all',  '获取所有字典',true,true)]
     #[Auth('admin')]
     public function all()
     {

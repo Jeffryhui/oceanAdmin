@@ -14,6 +14,7 @@
     "require": {
         "php": ">=8.1",
         "96qbhy/hyperf-auth": "^3.1",
+        "assert6/hyperf-elasticsearch": "^3.2",
         "ella123/hyperf-captcha": "^3.12",
         "friendsofhyperf/encryption": "^3.1",
         "friendsofhyperf/helpers": "^3.1",
@@ -33,7 +34,8 @@
         "hyperf/paginator": "^3.1",
         "hyperf/process": "~3.1.0",
         "hyperf/redis": "~3.1.0",
-        "hyperf/validation": "^3.1"
+        "hyperf/validation": "^3.1",
+        "zoujingli/ip2region": "^2.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
@@ -42,6 +44,7 @@
         "hyperf/watcher": "^3.1",
         "mockery/mockery": "^1.0",
         "phpstan/phpstan": "^1.0",
+        "qiutuleng/hyperf-dump-server": "^2.1",
         "swoole/ide-helper": "^5.0"
     },
     "suggest": {
