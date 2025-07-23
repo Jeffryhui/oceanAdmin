@@ -25,8 +25,8 @@ class StatisticsController extends BaseController
          */
         $user = auth('admin')->user();
         $userCount = SystemUser::query()->count();
-        $loginCount = LoginLog::query()->where('username',$user->username)->where('status',LoginLog::STATUS_SUCCESS)->get()->count();
-        $operateCount = OperateLog::query()->where('username',$user->username)->get()->count();
+        $loginCount = LoginLog::query()->where('username',$user->username)->where('status',LoginLog::STATUS_SUCCESS)->get(1000)->count();
+        $operateCount = OperateLog::query()->where('username',$user->username)->get(1000)->count();
         $data = [
             'user' => $userCount, // 用户总数
             'attach' => 10, // 附件总数

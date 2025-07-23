@@ -7,6 +7,7 @@ use App\Controller\Controller as BaseController;
 use App\EsModel\LoginLog;
 use App\EsModel\OperateLog;
 use App\Model\Permission\SystemUser;
+use App\Request\System\UpdateUserRequest;
 use App\Service\Permission\SystemUserService;
 use App\Utils\Response;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -70,5 +71,18 @@ class SystemUserController extends BaseController
         $data = $request->only(['avatar', 'nickname', 'email', 'phone', 'signed', 'backend_setting']);
         $this->systemUserService->updateUserInfo($data);
         return Response::success([], '更新用户信息成功');
+    }
+
+    #[PostMapping(path: 'change-password')]
+    #[Permission('admin:system-user:change-password', '修改密码', true, true)]
+    #[Auth('admin')]
+    public function changePassword(UpdateUserRequest $request)
+    {
+        $data = $request->validated();
+        $result = $this->systemUserService->changePassword($data);
+        if(!$result){
+            return Response::error('修改密码失败');
+        }
+        return Response::success([], '修改密码成功');
     }
 }

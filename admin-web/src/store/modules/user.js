@@ -98,7 +98,7 @@ const useUserStore = defineStore('user', {
     },
 
     async logout() {
-      // await loginApi.logout()
+      await loginApi.logout()
       const tagStore = useTagStore()
       tool.local.remove('tags')
       tagStore.clearTags()

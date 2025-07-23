@@ -4,7 +4,8 @@ namespace App\Service\Permission;
 
 use App\Exception\BusinessException;
 use App\Model\Permission\SystemUser;
-        
+use HyperfExtension\Hashing\Hash;
+
 class SystemUserService
 {
     /**
@@ -48,5 +49,24 @@ class SystemUserService
             throw new BusinessException('没有需要更新的信息');
         }
         return $user->update($update);
+    }
+
+    /**
+     * 修改密码
+     * @param array $data
+     * @throws \App\Exception\BusinessException
+     * @return bool
+     */
+    public function changePassword(array $data)
+    {
+        /**
+         * @var SystemUser $user
+         */
+        $user = auth('admin')->user();
+        if(!Hash::check($data['old_password'], $user->password)){
+            throw new BusinessException('旧密码错误');
+        }
+        $user->password = Hash::make($data['new_password']);
+        return $user->save();
     }
 }

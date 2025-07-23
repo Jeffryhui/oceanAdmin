@@ -2,24 +2,24 @@
   <a-form class="w-full md:w-full mt-3" :model="password" @submit="modifyPassword">
     <a-form-item
       label="旧密码"
-      field="oldPassword"
+      field="old_password"
       label-col-flex="80px"
       :rules="[{ required: true, message: '旧密码必填'}]"
     >
       <a-input-password
-        v-model="password.oldPassword"
+        v-model="password.old_password"
         allow-clear
         autocomplete="off"
       />
     </a-form-item>
     <a-form-item
       label="新密码"
-      field="newPassword"
+      field="new_password"
       label-col-flex="80px"
       :rules="[{ required: true, message: '新密码必填'}]"
     >
       <a-input-password
-        v-model="password.newPassword"
+        v-model="password.new_password"
         @input="checkSafe"
         @clear="() => passwordSafePercent = 0"
         autocomplete="off"
@@ -37,13 +37,13 @@
     </a-form-item>
     <a-form-item
       label="确认密码"
-      field="newPassword_confirmation"
+      field="new_password_confirmation"
       label-col-flex="80px"
       :rules="[{ required: true, message: '确认密码必填' }]"
     >
       <a-input-password
         allow-clear
-        v-model="password.newPassword_confirmation"
+        v-model="password.new_password_confirmation"
         autocomplete="off"
       />
     </a-form-item>
@@ -67,9 +67,9 @@
 
   const router = useRouter()
   const password = reactive({
-    oldPassword: '',
-    newPassword: '',
-    newPassword_confirmation: ''
+    old_password: '',
+    new_password: '',
+    new_password_confirmation: ''
   })
 
   const visible = ref(false)
@@ -82,16 +82,15 @@
 
   const modifyPassword = async (data) => {
     if (! data.errors) {
-      if (data.values.newPassword !== data.values.newPassword_confirmation) {
+      if (data.values.new_password !== data.values.new_password_confirmation) {
         Message.error('确认密码与新密码不一致')
         return
       }
       const response = await user.modifyPassword(data.values)
       if (response.code === 200) {
         tool.local.clear()
+        Message.success('密码修改成功')
         visible.value = true
-      } else {
-        Message.error(response.message)
       }
     }
   }

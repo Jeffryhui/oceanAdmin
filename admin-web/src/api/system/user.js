@@ -126,7 +126,7 @@ export default {
    */
   modifyPassword(data = {}) {
     return request({
-      url: '/core/user/modifyPassword',
+      url: '/admin/system-user/change-password',
       method: 'post',
       data
     })
