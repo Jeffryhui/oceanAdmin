@@ -238,22 +238,6 @@ class MenuService
                             ]
                         ]
                     ],
-                    [
-                        'id' => 3600,
-                        'parent_id' => 3000,
-                        'name' => 'monitor/emailLog',
-                        'path' => '/monitor/emailLog',
-                        'component' => 'system/logs/emailLog',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '邮件记录',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconEmail'
-                        ]
-                    ]
                 ]
             ],
             [
