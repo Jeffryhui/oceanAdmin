@@ -25,6 +25,8 @@
         "hyperf/database": "~3.1.0",
         "hyperf/db-connection": "~3.1.0",
         "hyperf/engine": "^2.10",
+        "hyperf/filesystem": "^3.1",
+        "hyperf/flysystem-oss": "^1.4",
         "hyperf/framework": "~3.1.0",
         "hyperf/guzzle": "~3.1.0",
         "hyperf/http-server": "~3.1.0",
@@ -35,6 +37,8 @@
         "hyperf/process": "~3.1.0",
         "hyperf/redis": "~3.1.0",
         "hyperf/validation": "^3.1",
+        "overtrue/flysystem-cos": "^5.1",
+        "overtrue/flysystem-qiniu": "^3.2",
         "zoujingli/ip2region": "^2.0"
     },
     "require-dev": {

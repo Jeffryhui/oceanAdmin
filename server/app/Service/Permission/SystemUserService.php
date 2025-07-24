@@ -39,11 +39,15 @@ class SystemUserService
          * @var SystemUser $user
          */
         $user = auth('admin')->user();
-        if(SystemUser::where('email',$data['email'])->where('id','!=',$user->id)->exists()){
-            throw new BusinessException('邮箱已存在');
+        if(isset($update['email'])){
+            if(SystemUser::where('email',$update['email'])->where('id','!=',$user->id)->exists()){
+                throw new BusinessException('邮箱已存在');
+            }
         }
-        if(SystemUser::where('phone',$data['phone'])->where('id','!=',$user->id)->exists()){
-            throw new BusinessException('手机号已存在');
+        if(isset($update['phone'])){
+            if(SystemUser::where('phone',$update['phone'])->where('id','!=',$user->id)->exists()){
+                throw new BusinessException('手机号已存在');
+            }
         }
         if(empty($update)){
             throw new BusinessException('没有需要更新的信息');

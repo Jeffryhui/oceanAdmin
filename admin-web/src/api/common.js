@@ -68,7 +68,7 @@ export default {
    */
   uploadImage(data = {}) {
     return request({
-      url: '/core/system/uploadImage',
+      url: '/admin/common/upload-image',
       method: 'post',
       timeout: 30000,
       // headers: { 'Content-Type': 'multipart/form-data' },
