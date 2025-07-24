@@ -167,7 +167,7 @@ export default {
    */
   dictAll() {
     return request({
-      url: '/admin/dict/all',
+      url: '/admin/dict-data/all',
       method: 'get'
     })
   },
@@ -182,15 +182,4 @@ export default {
       method: 'get'
     })
   },
-
-  /**
-   * 根据hash下载资源
-   */
-  downloadByHash(hash) {
-    return request({
-      url: '/core/system/downloadByHash?hash=' + hash,
-      responseType: 'blob',
-      method: 'get'
-    })
-  }
 }

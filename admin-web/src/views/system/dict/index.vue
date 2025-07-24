@@ -62,6 +62,8 @@ const searchForm = ref({
   name: '',
   code: '',
   status: '',
+  order_field: 'created_at',
+  order_type: 'desc',
 })
 
 // 修改状态
@@ -116,7 +118,7 @@ const columns = reactive([
   { title: '字典名称', dataIndex: 'name', width: 220, align: 'left' },
   { title: '字典标识', dataIndex: 'code', width: 260, align: 'left' },
   { title: '状态', dataIndex: 'status', width: 180 },
-  { title: '创建时间', dataIndex: 'create_time', width: 180 },
+  { title: '创建时间', dataIndex: 'created_at', width: 180 },
 ])
 
 // 页面数据初始化

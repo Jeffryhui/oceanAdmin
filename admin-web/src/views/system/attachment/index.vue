@@ -180,6 +180,8 @@ const searchForm = ref({
   mime_type: '',
   storage_mode: '',
   created_at: [],
+  order_field: 'created_at',
+  order_type: 'desc',
 })
 
 // SaTable 基础配置

@@ -55,8 +55,8 @@ const searchForm = ref({
   label: '',
   value: '',
   status: '',
-  orderBy: 'sort',
-  orderType: 'desc',
+  order_field: 'sort',
+  order_type: 'desc',
 })
 
 // 修改状态
@@ -118,7 +118,7 @@ const columns = reactive([
   { title: '颜色', dataIndex: 'color', width: 120 },
   { title: '排序', dataIndex: 'sort', width: 180 },
   { title: '状态', dataIndex: 'status', width: 180 },
-  { title: '创建时间', dataIndex: 'create_time', width: 180 },
+  { title: '创建时间', dataIndex: 'created_at', width: 180 },
 ])
 
 // SaTable 数据请求

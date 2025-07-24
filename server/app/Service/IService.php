@@ -32,5 +32,7 @@ interface IService
     
     public function batchDelete(array $ids): int;
 
+    public function changeStatus(int $id, int $status): int;
+
     public function preQuery(Builder|Model $builder,array $params = []): Builder;
 }

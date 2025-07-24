@@ -7,7 +7,7 @@ export const dictType = {
    */
   getPageList(params = {}) {
     return request({
-      url: '/core/dictType/index',
+      url: '/admin/dict-type/list',
       method: 'get',
       params
     })
@@ -19,7 +19,7 @@ export const dictType = {
    */
   save(params = {}) {
     return request({
-      url: '/core/dictType/save',
+      url: '/admin/dict-type/store',
       method: 'post',
       data: params
     })
@@ -31,8 +31,8 @@ export const dictType = {
    */
   destroy(data) {
     return request({
-      url: '/core/dictType/destroy',
-      method: 'delete',
+      url: '/admin/dict-type/batch-delete',
+      method: 'post',
       data
     })
   },
@@ -43,7 +43,7 @@ export const dictType = {
    */
   update(id, data = {}) {
     return request({
-      url: '/core/dictType/update?id=' + id,
+      url: '/admin/dict-type/' + id,
       method: 'put',
       data
     })
@@ -55,7 +55,7 @@ export const dictType = {
    */
   changeStatus(data = {}) {
     return request({
-      url: '/core/dictType/changeStatus',
+      url: '/admin/dict-type/change-status',
       method: 'post',
       data
     })
@@ -68,12 +68,12 @@ export const dict = {
    * @param {*} params
    * @returns
    */
-  getDict(code) {
-    return request({
-      url: '/core/dataDict/index?code=' + code,
-      method: 'get'
-    })
-  },
+  // getDict(code) {
+  //   return request({
+  //     url: '/admin/dict-data/list?code=' + code,
+  //     method: 'get'
+  //   })
+  // },
 
   /**
    * 获取字典数据分页列表
@@ -81,7 +81,7 @@ export const dict = {
    */
   getPageList(params = {}) {
     return request({
-      url: '/core/dictData/index',
+      url: '/admin/dict-data/list',
       method: 'get',
       params
     })
@@ -93,7 +93,7 @@ export const dict = {
    */
   addDictData(data = {}) {
     return request({
-      url: '/core/dictData/save',
+      url: '/admin/dict-data/store',
       method: 'post',
       data
     })
@@ -105,8 +105,8 @@ export const dict = {
    */
   destroyDictData(data) {
     return request({
-      url: '/core/dictData/destroy',
-      method: 'delete',
+      url: '/admin/dict-data/batch-delete',
+      method: 'post',
       data
     })
   },
@@ -117,7 +117,7 @@ export const dict = {
    */
   editDictData(id, data = {}) {
     return request({
-      url: '/core/dictData/update?id=' + id,
+      url: '/admin/dict-data/' + id,
       method: 'put',
       data
     })
@@ -129,7 +129,7 @@ export const dict = {
    */
   changeStatus(data = {}) {
     return request({
-      url: '/core/dictData/changeStatus',
+      url: '/admin/dict-data/change-status',
       method: 'post',
       data
     })

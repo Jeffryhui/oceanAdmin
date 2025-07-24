@@ -32,20 +32,43 @@ class CrudController extends Controller
     public function update(int $id)
     {
         $data = $this->validator->validated();
-        $this->service->update($id, $data);
-        return Response::success(['id' => $id], '更新成功');
+        $result = $this->service->update($id, $data);
+        if($result){
+            return Response::success(['id' => $id], '更新成功');
+        }
+        return Response::error('更新失败');
     }
 
     public function delete(int $id)
     {
-        $this->service->delete($id);
-        return Response::success(['id' => $id], '删除成功');
+        $result = $this->service->delete($id);
+        if($result){
+            return Response::success(['id' => $id], '删除成功');
+        }
+        return Response::error('删除失败');
     }
 
     public function batchDelete()
     {
         $ids = $this->request->post('ids',[]);
-        $this->service->batchDelete($ids);
-        return Response::success(['ids' => $ids], '批量删除成功');
+        $result = $this->service->batchDelete($ids);
+        if($result){
+            return Response::success(['ids' => $ids], '批量删除成功');
+        }
+        return Response::error('批量删除失败');
+    }
+
+    public function changeStatus()
+    {
+        $id = $this->request->post('id',0);
+        if(empty($id)){
+            return Response::error('ID不能为空');
+        }
+        $status = $this->request->post('status',2);
+        $result = $this->service->changeStatus((int)$id, (int)$status);
+        if($result){
+            return Response::success(null, '状态更新成功');
+        }
+        return Response::error('状态更新失败');
     }
 }

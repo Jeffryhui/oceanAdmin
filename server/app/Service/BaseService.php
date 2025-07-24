@@ -35,4 +35,8 @@ class BaseService
     public function batchDelete(array $ids): int{
         return $this->model->whereIn('id', $ids)->delete();
     }
+
+    public function changeStatus(int $id, int $status): int{
+        return $this->model->where('id', $id)->update(['status' => $status]);
+    }
 }
