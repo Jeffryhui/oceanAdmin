@@ -154,38 +154,6 @@ class MenuService
                             'icon' => 'IconAttachment'
                         ]
                     ],
-                    [
-                        'id' => 2300,
-                        'parent_id' => 2000,
-                        'name' => 'data/database',
-                        'path' => '/data/database',
-                        'component' => 'system/database/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '数据表维护',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconNav'
-                        ]
-                    ],
-                    [
-                        'id' => 2700,
-                        'parent_id' => 2000,
-                        'name' => 'data/notice',
-                        'path' => '/data/notice',
-                        'component' => 'system/notice/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '系统公告',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconNotification'
-                        ]
-                    ]
                 ]
             ],
             [
