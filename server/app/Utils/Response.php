@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use Hyperf\Context\ApplicationContext;
+use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Paginator\Paginator;
 
@@ -73,5 +74,22 @@ class Response
     public static function validateError($message = '参数验证失败', $code = 422, $status = 422)
     {
         return self::response(null, $message, $code, $status);
+    }
+
+    /**
+     * 分页响应
+     * @param \Hyperf\Contract\LengthAwarePaginatorInterface $paginator
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public static function paginate(LengthAwarePaginatorInterface $paginator)
+    {
+        return self::response([
+            'current_page' => $paginator->currentPage(),
+            'data' => $paginator->items(),
+            'has_more' => $paginator->hasMorePages(),
+            'last_page' => $paginator->lastPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+        ]);
     }
 }

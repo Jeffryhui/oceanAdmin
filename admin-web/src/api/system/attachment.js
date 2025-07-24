@@ -7,7 +7,7 @@ export default {
    */
   getPageList(params = {}) {
     return request({
-      url: '/core/attachment/index',
+      url: '/admin/attachment/list',
       method: 'get',
       params
     })
@@ -19,8 +19,8 @@ export default {
    */
   destroy(data) {
     return request({
-      url: '/core/attachment/destroy',
-      method: 'delete',
+      url: '/admin/attachment/batch-delete',
+      method: 'post',
       data
     })
   }

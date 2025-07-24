@@ -27,8 +27,8 @@
             </a-form-item>
           </a-col>
           <a-col :sm="10" :xs="24">
-            <a-form-item field="create_time" label="上传时间">
-              <a-range-picker v-model="searchForm.create_time" />
+            <a-form-item field="created_at" label="上传时间">
+              <a-range-picker v-model="searchForm.created_at" />
             </a-form-item>
           </a-col>
         </template>
@@ -81,7 +81,7 @@
                             <template #content>
                               <div>存储名称：{{ record.object_name }}</div>
                               <div>存储目录：{{ record.storage_path }}</div>
-                              <div>上传时间：{{ record.create_time }}</div>
+                              <div>上传时间：{{ record.created_at }}</div>
                               <div>存储模式：{{ tool.getLabel(record.storage_mode, dictList['upload_mode']) }}</div>
                             </template>
                           </a-tooltip>
@@ -103,6 +103,9 @@
             height="40px"
             :src="tool.attachUrl(record.url)" />
           <a-avatar v-else shape="square" style="top: 0px">{{ record.suffix }}</a-avatar>
+        </template>
+        <template #storage_mode="{ record }">
+          {{ tool.getLabel(record.storage_mode, dictList['upload_mode']) }}
         </template>
         <!-- 操作列前置扩展 -->
         <template #operationBeforeExtend="{ record }">
@@ -176,7 +179,7 @@ const searchForm = ref({
   origin_name: '',
   mime_type: '',
   storage_mode: '',
-  create_time: [],
+  created_at: [],
 })
 
 // SaTable 基础配置
@@ -202,15 +205,16 @@ const columns = reactive([
   { title: '预览', dataIndex: 'url', width: 80 },
   { title: '存储名称', dataIndex: 'object_name', width: 220 },
   { title: '原文件名', dataIndex: 'origin_name', width: 150 },
-  { title: '存储模式', dataIndex: 'storage_mode', dict: 'upload_mode', width: 100 },
+  { title: '存储模式', dataIndex: 'storage_mode',width: 100 },
   { title: '资源类型', dataIndex: 'mime_type', width: 130 },
   { title: '存储目录', dataIndex: 'storage_path', width: 130 },
   { title: '文件大小', dataIndex: 'size_info', width: 130 },
-  { title: '上传时间', dataIndex: 'create_time', width: 180 },
+  { title: '上传时间', dataIndex: 'created_at', width: 180 },
 ])
 
 // 页面加载完成执行
 onMounted(async () => {
+  console.log(dictList)
   const treeData = dictList['attachment_type']
   sliderData.value = [{ label: '所有', value: 'all' }, ...treeData]
   crudRef.value?.refresh()
