@@ -4,7 +4,9 @@ namespace App\Controller\Data;
 
 use App\Annotation\Permission;
 use App\Controller\CrudController;
+use App\Model\Data\Attachment;
 use App\Service\Data\AttachmentService;
+use App\Utils\Response;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -42,5 +44,22 @@ class AttachmentController extends CrudController
     public function batchDelete()
     {
         return parent::batchDelete();
+    }
+
+    #[GetMapping(path: "download")]
+    #[Permission("attachment.download", "下载附件", false, true)]
+    #[Auth('admin')]
+    public function downloadById()
+    {
+        $id = $this->request->input('id');
+        /**
+         * @var Attachment $attachment
+         */
+        $attachment = Attachment::find($id);
+        if(empty($attachment)){
+            return Response::error('附件不存在',404,404);
+        }
+        $storagePath = $attachment->storage_path;
+        return $this->response->download(BASE_PATH.'/public/'.$storagePath,$attachment->object_name);
     }
 }

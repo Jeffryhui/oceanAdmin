@@ -177,7 +177,7 @@ export default {
    */
   downloadById(id) {
     return request({
-      url: '/core/system/downloadById?id=' + id,
+      url: '/admin/attachment/download?id=' + id,
       responseType: 'blob',
       method: 'get'
     })
