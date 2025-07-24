@@ -6,6 +6,7 @@ use App\Annotation\Permission;
 use App\Controller\Controller as BaseController;
 use App\EsModel\LoginLog;
 use App\EsModel\OperateLog;
+use App\Model\Data\Attachment;
 use App\Model\Permission\SystemUser;
 use App\Utils\Response;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -27,9 +28,10 @@ class StatisticsController extends BaseController
         $userCount = SystemUser::query()->count();
         $loginCount = LoginLog::query()->where('username',$user->username)->where('status',LoginLog::STATUS_SUCCESS)->get(1000)->count();
         $operateCount = OperateLog::query()->where('username',$user->username)->get(1000)->count();
+        $attachmentCount = Attachment::query()->count();
         $data = [
             'user' => $userCount, // 用户总数
-            'attach' => 10, // 附件总数
+            'attach' => $attachmentCount, // 附件总数
             'login' => $loginCount, // 登录次数
             'operate' => $operateCount, // 操作次数
         ];
