@@ -41,10 +41,37 @@ class StatisticsController extends BaseController
     #[Auth('admin')]
     public function loginChart()
     {
+        /**
+         * @var SystemUser $user
+         */
+        $user = auth('admin')->user();
+        $loginDates = [];
+        $loginCounts = [];
+        
+        // 生成最近7天的日期数组并统计每天登录次数
+        for ($i = 6; $i >= 0; $i--) {
+            $date = date('Y-m-d', strtotime("-{$i} days"));
+            $loginDates[] = $date;
+            
+            // 查询当天的成功登录次数
+            $startTime = $date . ' 00:00:00';
+            $endTime = $date . ' 23:59:59';
+            
+            $count = LoginLog::query()
+                ->where('status', LoginLog::STATUS_SUCCESS)
+                ->where('username',$user->username)
+                ->whereBetween('create_time', [strtotime($startTime), strtotime($endTime)])
+                ->get(10000) 
+                ->count();
+            
+            $loginCounts[] = $count;
+        }
+        
         $data = [
-            'login_date' => ['2025-01-01', '2025-01-02', '2025-01-03', '2025-01-04', '2025-01-05', '2025-01-06', '2025-01-07'],
-            'login_count' => [1000, 200, 300, 400, 500, 600, 700],
+            'login_date' => $loginDates,
+            'login_count' => $loginCounts,
         ];
+        
         return Response::success($data);
     }
 }
