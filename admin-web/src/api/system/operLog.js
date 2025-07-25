@@ -10,7 +10,7 @@ export default {
    */
   getPageList(params = {}) {
     return request({
-      url: '/core/logs/getOperLogPageList',
+      url: '/admin/monitor/operate-log',
       method: 'get',
       params
     })

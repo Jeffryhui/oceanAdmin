@@ -10,8 +10,8 @@
           </a-form-item>
         </a-col>
         <a-col :sm="8" :xs="24">
-          <a-form-item field="router" label="操作路由">
-            <a-input v-model="searchForm.router" placeholder="请输入操作路由" />
+          <a-form-item field="service_name" label="业务名称">
+            <a-input v-model="searchForm.service_name" placeholder="请输入业务名称" />
           </a-form-item>
         </a-col>
         <a-col :sm="8" :xs="24">
@@ -38,29 +38,18 @@ const crudRef = ref()
 
 // 搜索表单
 const searchForm = ref({
-  name: '',
-  status: '',
-  login_time: [],
-  orderBy: 'create_time',
-  orderType: 'desc',
+  username: '',
+  service_name: '',
+  ip: '',
+  create_time: [],
 })
 
 // SaTable 基础配置
 const options = reactive({
   api: operLog.getPageList,
-  rowSelection: { showCheckedAll: true, onlyCurrent: false },
-  operationColumnWidth: 100,
-  delete: {
-    show: true,
-    auth: ['/core/logs/deleteOperLog'],
-    func: async (params) => {
-      const resp = await operLog.destroy(params)
-      if (resp.code === 200) {
-        Message.success(`删除成功！`)
-        crudRef.value?.refresh()
-      }
-    },
-  },
+  rowSelection: false,
+  delete: false,
+  operationColumn:false,
 })
 
 // SaTable 列配置

@@ -19,7 +19,13 @@ class OperateLog extends Model
             'type' => 'text'
         ],
         'service_name' => [
-            'type' => 'text'
+            'type' => 'text',
+            'fields' => [
+                'keyword' => [
+                    'type' => 'keyword',
+                    'ignore_above' => 256
+                ]
+            ]
         ],
         'ip' => [
             'type' => 'text'

@@ -107,7 +107,7 @@ export default {
    */
   getLoginLogList(params = {}) {
     return request({
-      url: '/core/system/getLoginLogList',
+      url: '/admin/monitor/login-log',
       method: 'get',
       params
     })
