@@ -16,6 +16,7 @@
         "96qbhy/hyperf-auth": "^3.1",
         "assert6/hyperf-elasticsearch": "^3.2",
         "ella123/hyperf-captcha": "^3.12",
+        "friendsofhyperf/cache": "^3.1",
         "friendsofhyperf/encryption": "^3.1",
         "friendsofhyperf/helpers": "^3.1",
         "hyperf-extension/hashing": "^3.1",

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Middleware\CorsMiddleware;
 use App\Middleware\OperateLogMiddleware;
+use App\Middleware\PermissionMiddleware;
 
 /**
  * This file is part of Hyperf.
@@ -17,6 +18,7 @@ return [
     'http' => [
         CorsMiddleware::class,
         \Hyperf\Validation\Middleware\ValidationMiddleware::class,
-        OperateLogMiddleware::class
+        PermissionMiddleware::class,
+        OperateLogMiddleware::class,
     ],
 ];

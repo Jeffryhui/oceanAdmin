@@ -1,7 +1,8 @@
 <template>
   <a-layout-content class="flex flex-col">
-    <statistics v-if="userStore.user && userStore.user.dashboard === 'statistics'" />
-    <work-panel v-else-if="userStore.user" />
+    <!-- <statistics v-if="userStore.user && userStore.user.dashboard === 'statistics'" />
+    <work-panel v-else-if="userStore.user" /> -->
+    <statistics />
   </a-layout-content>
 </template>
 

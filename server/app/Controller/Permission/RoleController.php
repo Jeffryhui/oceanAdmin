@@ -4,11 +4,14 @@ namespace App\Controller\Permission;
 
 use App\Annotation\Permission;
 use App\Controller\CrudController;
+use App\Model\Permission\Menu;
 use App\Model\Permission\Role;
 use App\Request\Permission\RoleRequest;
+use App\Service\Permission\PermissionCacheService;
 use App\Service\Permission\RbacService;
 use App\Service\Permission\RoleService;
 use App\Utils\Response;
+use App\Utils\Tree;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -22,6 +25,9 @@ class RoleController extends CrudController
 {
     #[Inject]
     private RbacService $rbacService;
+    #[Inject]
+    private PermissionCacheService $cacheService;
+    
     public function __construct(RoleService $service)
     {
         $this->service = $service;
@@ -49,7 +55,10 @@ class RoleController extends CrudController
     #[Auth('admin')]
     public function update(int $id)
     {
-        return parent::update($id);
+        $result = parent::update($id);
+        // 角色更新后清理相关缓存
+        $this->cacheService->clearRoleCache($id);
+        return $result;
     }
 
     #[DeleteMapping(path: '{id}')]
@@ -57,6 +66,8 @@ class RoleController extends CrudController
     #[Auth('admin')]
     public function delete(int $id)
     {
+        // 先清理角色相关缓存
+        $this->cacheService->clearRoleCache($id);
         return parent::delete($id);
     }
 
@@ -70,7 +81,7 @@ class RoleController extends CrudController
 
 
     #[GetMapping(path: 'role-menus')]
-    #[Permission('permission:   :role-menus', '获取角色菜单', false, true)]
+    #[Permission('permission:role:role-menus', '获取角色菜单', false, true)]
     #[Auth('admin')]
     public function roleMenus()
     {
@@ -108,5 +119,20 @@ class RoleController extends CrudController
         }
         $res = $this->rbacService->assignMenus($id, $menuIDS);
         return Response::success($res, '分配菜单成功');
+    }
+
+    #[GetMapping(path: 'menu-tree')]
+    #[Permission('permission:role:menu-tree', '菜单树', false, true)]
+    #[Auth('admin')]
+    public function menuTree()
+    {
+        $data =  Menu::query()
+        ->select(['id', 'parent_id', 'name as label', 'id as value']) // value 用 id
+        ->where('status', 1)
+        ->orderBy('sort')
+        ->get()
+        ->toArray();
+        $tree = Tree::build($data);
+        return Response::success($tree);
     }
 }

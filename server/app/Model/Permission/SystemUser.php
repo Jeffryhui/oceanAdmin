@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\Permission;
 
 use App\Model\Model;
+use Hyperf\Database\Model\SoftDeletes;
 use Qbhy\HyperfAuth\AuthAbility;
 use Qbhy\HyperfAuth\Authenticatable;
 
@@ -31,7 +32,7 @@ use function Hyperf\Support\env;
  */
 class SystemUser extends Model implements Authenticatable
 {
-    use AuthAbility;
+    use AuthAbility,SoftDeletes;
     /**
      * The table associated with the model.
      */
@@ -75,12 +76,14 @@ class SystemUser extends Model implements Authenticatable
     }
 
     public function menus(){
-        return $this->roles()->with('menus')->get()->pluck('menus')->flatten();
+        return $this->roles()->with(['menus'=>function($query){
+            $query->orderBy('sort','asc')->orderBy('id','asc');
+        }])->get()->pluck('menus')->flatten();
     }
 
     public function hasMenu($code)
     {
-        return $this->menus()->where('code', $code)->exists();
+        return $this->menus()->where('code', $code)->isNotEmpty();
     }
 
     public function hasRole($code)

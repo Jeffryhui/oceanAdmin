@@ -3,286 +3,163 @@
 namespace App\Service\Permission;
 
 use App\Model\Permission\Menu;
+use App\Model\Permission\SystemUser;
 use App\Service\BaseService;
 use App\Service\IService;
+use Hyperf\Di\Annotation\Inject;
+use FriendsOfHyperf\Cache\Contract\Repository as CacheInterface;
 
 class MenuService extends BaseService implements IService
 {
+
+    const CACHE_KEY_USER_MENU_CODES = 'user_menu_codes_';
+    const CACHE_KEY_USER_MENUS = 'user_menus_';
+
+    #[Inject]
+    private CacheInterface $cache;
     public function __construct(Menu $model)
     {
         $this->model = $model;
     }
-    public function getUserMenus()
+
+    /**
+     * 获取用户对应的菜单code
+     * @param int $userId
+     * @return array
+     */
+    public function getUserMenuCodes(int $userId)
     {
-        // TODO 从数据库查询用户对应的菜单
-        $routers = [
-            [
-                'id' => 1000,
-                'parent_id' => 0,
-                'name' => 'permission',
-                'path' => '/permission',
-                'component' => '',
-                'redirect' => null,
+        $cacheKey = self::CACHE_KEY_USER_MENU_CODES . $userId;
+        // 获取到用户对应的菜单code
+        /**
+         * @var SystemUser $user
+         */
+        $user = SystemUser::find($userId);
+        if (empty($user)) {
+            return [];
+        }
+        if ($user->id == SystemUser::SUPER_ADMIN_ID) {
+            return ['*'];
+        }
+        $menus = $user->menus()->toArray();
+        return $this->cache->remember($cacheKey, 60, function () use ($menus) {
+            return array_column($menus, 'code');
+        });
+    }
+
+
+    public function getUserMenus(int $userID)
+    {
+        $cacheKey = self::CACHE_KEY_USER_MENUS . $userID;
+
+        return $this->cache->remember($cacheKey, 60, function () use ($userID) {
+            /**
+             * @var SystemUser $user
+             */
+            $user = SystemUser::find($userID);
+            if (empty($user)) {
+                return [];
+            }
+
+            // 如果是超级管理员，返回所有菜单
+            if ($user->id == SystemUser::SUPER_ADMIN_ID) {
+                $menus = Menu::where('status', 1)
+                    ->where('type', 'M')
+                    ->orderBy('sort', 'asc')
+                    ->get()
+                    ->toArray();
+            } else {
+                // 根据用户角色获取菜单
+                $menus = $user->menus()
+                    ->where('status', 1)
+                    ->where('type', 'M')
+                    ->sortBy('sort')
+                    ->values()
+                    ->toArray();
+            }
+
+            // 组装前端需要的数据格式
+            $formattedMenus = $this->formatMenusForFrontend($menus);
+
+            // 构建树形结构
+            return \App\Utils\Tree::build($formattedMenus);
+        });
+    }
+
+    /**
+     * 格式化菜单数据为前端需要的格式
+     * @param array $menus
+     * @return array
+     */
+    private function formatMenusForFrontend(array $menus): array
+    {
+        return array_map(function ($menu) {
+            return [
+                'id' => $menu['id'],
+                'parent_id' => $menu['parent_id'],
+                'name' => $menu['code'], // 路由名称使用code
+                'path' => '/' . $menu['route'], // 路由路径
+                'component' => $menu['component'] ?? '',
+                'redirect' => $menu['redirect'] ?? null,
                 'meta' => [
-                    'title' => '权限',
-                    'type' => 'M',
-                    'hidden' => false,
-                    'layout' => true,
-                    'hiddenBreadcrumb' => false,
-                    'icon' => 'IconSafe'
-                ],
-                'children' => [
-                    [
-                        'id' => 1100,
-                        'parent_id' => 1000,
-                        'name' => 'permission/user',
-                        'path' => '/permission/user',
-                        'component' => 'system/user/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '用户管理',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconUserGroup'
-                        ]
-                    ],
-                    [
-                        'id' => 1200,
-                        'parent_id' => 1000,
-                        'name' => 'permission/menu',
-                        'path' => '/permission/menu',
-                        'component' => 'system/menu/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '菜单管理',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconMenu'
-                        ]
-                    ],
-                    [
-                        'id' => 1400,
-                        'parent_id' => 1000,
-                        'name' => 'permission/role',
-                        'path' => '/permission/role',
-                        'component' => 'system/role/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '角色管理',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconLock'
-                        ]
-                    ],
+                    'title' => $menu['name'], // 显示标题使用name
+                    'type' => $menu['type'],
+                    'hidden' => $menu['is_hidden'] == 1, // 1是隐藏=true, 2否=false
+                    'layout' => $menu['is_layout'] == 1, // 1是=true, 2否=false
+                    'hiddenBreadcrumb' => false, // 默认值
+                    'icon' => $menu['icon'] ?? ''
                 ]
-            ],
-            [
-                'id' => 2000,
-                'parent_id' => 0,
-                'name' => 'data',
-                'path' => '/data',
-                'component' => '',
-                'redirect' => null,
-                'meta' => [
-                    'title' => '数据',
-                    'type' => 'M',
-                    'hidden' => false,
-                    'layout' => true,
-                    'hiddenBreadcrumb' => false,
-                    'icon' => 'IconStorage'
-                ],
-                'children' => [
-                    [
-                        'id' => 2100,
-                        'parent_id' => 2000,
-                        'name' => 'data/dict',
-                        'path' => '/data/dict',
-                        'component' => 'system/dict/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '数据字典',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconBook'
-                        ]
-                    ],
-                    [
-                        'id' => 2200,
-                        'parent_id' => 2000,
-                        'name' => 'data/attachment',
-                        'path' => '/data/attachment',
-                        'component' => 'system/attachment/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '附件管理',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconAttachment'
-                        ]
-                    ],
-                ]
-            ],
-            [
-                'id' => 3000,
-                'parent_id' => 0,
-                'name' => 'monitor',
-                'path' => '/monitor',
-                'component' => '',
-                'redirect' => null,
-                'meta' => [
-                    'title' => '监控',
-                    'type' => 'M',
-                    'hidden' => false,
-                    'layout' => true,
-                    'hiddenBreadcrumb' => false,
-                    'icon' => 'IconComputer'
-                ],
-                'children' => [
-                    [
-                        'id' => 3200,
-                        'parent_id' => 3000,
-                        'name' => 'monitor/server',
-                        'path' => '/monitor/server',
-                        'component' => 'system/monitor/server/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '服务监控',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconDashboard'
-                        ]
-                    ],
-                    [
-                        'id' => 3300,
-                        'parent_id' => 3000,
-                        'name' => 'monitor/logs',
-                        'path' => '/monitor/logs',
-                        'component' => '',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '日志监控',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconRobot'
-                        ],
-                        'children' => [
-                            [
-                                'id' => 3400,
-                                'parent_id' => 3300,
-                                'name' => 'monitor/logs/loginLog',
-                                'path' => '/monitor/logs/loginLog',
-                                'component' => 'system/logs/loginLog',
-                                'redirect' => null,
-                                'meta' => [
-                                    'title' => '登录日志',
-                                    'type' => 'M',
-                                    'hidden' => false,
-                                    'layout' => true,
-                                    'hiddenBreadcrumb' => false,
-                                    'icon' => 'IconImport'
-                                ]
-                            ],
-                            [
-                                'id' => 3500,
-                                'parent_id' => 3300,
-                                'name' => 'monitor/logs/operLog',
-                                'path' => '/monitor/logs/operLog',
-                                'component' => 'system/logs/operLog',
-                                'redirect' => null,
-                                'meta' => [
-                                    'title' => '操作日志',
-                                    'type' => 'M',
-                                    'hidden' => false,
-                                    'layout' => true,
-                                    'hiddenBreadcrumb' => false,
-                                    'icon' => 'IconInfoCircle'
-                                ]
-                            ]
-                        ]
-                    ],
-                ]
-            ],
-            [
-                'id' => 4000,
-                'parent_id' => 0,
-                'name' => 'tool',
-                'path' => '/tool',
-                'component' => '',
-                'redirect' => null,
-                'meta' => [
-                    'title' => '工具',
-                    'type' => 'M',
-                    'hidden' => false,
-                    'layout' => true,
-                    'hiddenBreadcrumb' => false,
-                    'icon' => 'IconTool'
-                ],
-                'children' => [
-                    [
-                        'id' => 4100,
-                        'parent_id' => 4000,
-                        'name' => 'tool/code',
-                        'path' => '/tool/code',
-                        'component' => 'tool/code/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '代码生成器',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconCodeSquare'
-                        ]
-                    ],
-                    [
-                        'id' => 4200,
-                        'parent_id' => 4000,
-                        'name' => 'tool/crontab',
-                        'path' => '/tool/crontab',
-                        'component' => 'tool/crontab/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '定时任务',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconSchedule'
-                        ]
-                    ]
-                ]
-            ],
-            [
-                'id' => 5000,
-                'parent_id' => 0,
-                'name' => 'config',
-                'path' => '/config',
-                'component' => 'system/config/index',
-                'redirect' => null,
-                'meta' => [
-                    'title' => '系统设置',
-                    'type' => 'M',
-                    'hidden' => false,
-                    'layout' => true,
-                    'hiddenBreadcrumb' => false,
-                    'icon' => 'IconSettings'
-                ]
-            ]
-        ];
-        return $routers;
+            ];
+        }, $menus);
+    }
+
+    public function deleteUserMenuCodesCache(int $userId)
+    {
+        $cacheKey = self::CACHE_KEY_USER_MENU_CODES . $userId;
+        return $this->cache->delete($cacheKey);
+    }
+
+    public function deleteUserMenusCache(int $userId)
+    {
+        $cacheKey = self::CACHE_KEY_USER_MENUS . $userId;
+        return $this->cache->delete($cacheKey);
+    }
+
+    /**
+     * 清理所有用户的菜单缓存
+     * @return void
+     */
+    public function clearAllUsersMenuCache()
+    {
+        // 获取所有用户ID
+        $userIds = \Hyperf\DbConnection\Db::table('system_user')
+            ->pluck('id')
+            ->toArray();
+        
+        // 清理所有用户的菜单相关缓存
+        foreach ($userIds as $userId) {
+            $this->deleteUserMenuCodesCache($userId);
+            $this->deleteUserMenusCache($userId);
+        }
+    }
+
+    /**
+     * 清理角色相关用户的菜单缓存
+     * @param int $roleId
+     * @return void
+     */
+    public function clearRoleUsersMenuCache(int $roleId)
+    {
+        // 获取拥有该角色的所有用户
+        $userIds = \Hyperf\DbConnection\Db::table('user_role')
+            ->where('role_id', $roleId)
+            ->pluck('system_user_id')
+            ->toArray();
+        
+        // 清理这些用户的菜单缓存
+        foreach ($userIds as $userId) {
+            $this->deleteUserMenuCodesCache($userId);
+            $this->deleteUserMenusCache($userId);
+        }
     }
 }

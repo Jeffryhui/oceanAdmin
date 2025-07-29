@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c10743f665c093aabc47e675ea2db7ca",
+    "content-hash": "cba431809709fbbb90883a4c98d92ee8",
     "packages": [
         {
             "name": "96qbhy/hyperf-auth",
@@ -1080,6 +1080,80 @@
                 "source": "https://github.com/php-fig/http-message-util/tree/1.1.5"
             },
             "time": "2020-11-24T22:02:12+00:00"
+        },
+        {
+            "name": "friendsofhyperf/cache",
+            "version": "v3.1.64",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/friendsofhyperf/cache.git",
+                "reference": "b3c0e96bf700128d840f990844944ef637e8c51d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/friendsofhyperf/cache/zipball/b3c0e96bf700128d840f990844944ef637e8c51d",
+                "reference": "b3c0e96bf700128d840f990844944ef637e8c51d",
+                "shasum": ""
+            },
+            "require": {
+                "hyperf/cache": "~3.1.0",
+                "hyperf/collection": "~3.1.0",
+                "hyperf/context": "~3.1.0",
+                "hyperf/macroable": "~3.1.0",
+                "hyperf/support": "~3.1.0",
+                "hyperf/tappable": "~3.1.0",
+                "nesbot/carbon": "^2.0 || ^3.0"
+            },
+            "suggest": {
+                "friendsofhyperf/lock": "Required to use lock function.(~3.1.0)",
+                "hyperf/coroutine": "Required to use defer function.(~3.1.0)"
+            },
+            "type": "library",
+            "extra": {
+                "hyperf": {
+                    "config": "FriendsOfHyperf\\Cache\\ConfigProvider"
+                },
+                "branch-alias": {
+                    "dev-main": "3.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "FriendsOfHyperf\\Cache\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "huangdijia",
+                    "email": "huangdijia@gmail.com"
+                }
+            ],
+            "description": "The cache component for Hyperf.",
+            "keywords": [
+                "hyperf",
+                "v3.1"
+            ],
+            "support": {
+                "docs": "https://hyperf.fans",
+                "issues": "https://github.com/friendsofhyperf/components/issues",
+                "pull-request": "https://github.com/friendsofhyperf/components/pulls",
+                "source": "https://github.com/friendsofhyperf/components"
+            },
+            "funding": [
+                {
+                    "url": "https://hdj.me/sponsors/",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/huangdijia",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-06-04T13:15:37+00:00"
         },
         {
             "name": "friendsofhyperf/encryption",

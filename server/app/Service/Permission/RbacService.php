@@ -5,9 +5,12 @@ namespace App\Service\Permission;
 use App\Exception\BusinessException;
 use App\Model\Permission\Role;
 use App\Model\Permission\SystemUser;
+use Hyperf\Di\Annotation\Inject;
 
 class RbacService
 {
+    #[Inject]
+    private PermissionCacheService $cacheService;
     /**
      * 分配菜单
      *
@@ -24,7 +27,13 @@ class RbacService
         if (empty($role)) {
             throw new BusinessException('角色不存在');
         }
-        return $role->menus()->sync($menuIds);
+        
+        $result = $role->menus()->sync($menuIds);
+        
+        // 清理角色相关用户的缓存
+        $this->cacheService->clearRoleCache($roleId);
+        
+        return $result;
     }
 
     /**
@@ -43,6 +52,12 @@ class RbacService
         if (empty($user)) {
             throw new BusinessException('用户不存在');
         }
-        return $user->roles()->sync($roleIds);
+        
+        $result = $user->roles()->sync($roleIds);
+        
+        // 清理用户的权限缓存
+        $this->cacheService->clearUserCache($userId);
+        
+        return $result;
     }
 }

@@ -19,7 +19,7 @@ export default {
    */
   accessMenu(params = {}) {
     return request({
-      url: '/admin/menu/tree',
+      url: '/admin/role/menu-tree',
       method: 'get',
       params
     })

@@ -10,7 +10,10 @@ use App\Model\Permission\Role;
 use App\Model\Permission\SystemUser;
 use App\Request\Permission\SystemUserRequest;
 use App\Request\System\UpdateUserRequest;
+use App\Service\Permission\MenuService;
+use App\Service\Permission\PermissionCacheService;
 use App\Service\Permission\RbacService;
+use App\Service\Permission\RoleService;
 use App\Service\Permission\SystemUserService;
 use App\Utils\Response;
 use Hyperf\Di\Annotation\Inject;
@@ -29,7 +32,13 @@ class SystemUserController extends CrudController
 
     protected SystemUserService $systemUserService;
     #[Inject]
+    private MenuService $menuService;
+    #[Inject]
+    private RoleService $roleService;
+    #[Inject]
     private RbacService $rbacService;
+    #[Inject]
+    private PermissionCacheService $cacheService;
     public function __construct(SystemUserService $systemUserService)
     {
         $this->service = $systemUserService;
@@ -149,6 +158,8 @@ class SystemUserController extends CrudController
     #[Auth('admin')]
     public function delete(int $id)
     {
+        // 先清理缓存
+        $this->cacheService->clearUserCache($id);
         return parent::delete($id);
     }
 
@@ -192,7 +203,12 @@ class SystemUserController extends CrudController
     #[Auth('admin')]
     public function changeStatus()
     {
-       return parent::changeStatus();
+        $id = $this->request->post('id', 0);
+        if (!empty($id)) {
+            // 状态变更后清理用户缓存
+            $this->cacheService->clearUserCache($id);
+        }
+        return parent::changeStatus();
     }
 
     #[PostMapping(path: 'update-cache')]
@@ -200,6 +216,12 @@ class SystemUserController extends CrudController
     #[Auth('admin')]
     public function updateCache()
     {
+        $id = $this->request->post('id',0);
+        if(empty($id)){
+            return Response::error('用户ID不能为空');
+        }
+        // 使用统一的缓存清理服务
+        $this->cacheService->clearUserCache($id);
         return Response::success([], '更新缓存成功');
     }
 

@@ -28,7 +28,7 @@
       <a-form-item label="图标" field="icon" v-if="formData.type != 'B'">
         <sa-icon-picker v-model="formData.icon" placeholder="请选择图标" />
       </a-form-item>
-      <a-form-item :label="formData.type == 'B' ? '接口地址' : '菜单标识'" field="code">
+      <a-form-item label="菜单标识" field="code">
         <a-input v-model="formData.code" placeholder="请输入内容" />
       </a-form-item>
       <a-form-item label="路由地址" field="route" v-if="formData.type != 'B'">

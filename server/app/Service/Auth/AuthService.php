@@ -6,6 +6,7 @@ use App\EsModel\LoginLog;
 use App\Exception\BusinessException;
 use App\Model\Permission\SystemUser;
 use App\Service\Permission\MenuService;
+use App\Service\Permission\RoleService;
 use App\Utils\IpLocationUtils;
 use App\Utils\ServerInfo;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ use function Hyperf\Support\env;
 
 class AuthService
 {
-    public function __construct(private MenuService $menuService,private IpLocationUtils $ipLocationUtils){}
+    public function __construct(private MenuService $menuService,private IpLocationUtils $ipLocationUtils,private RoleService $roleService){}
 
 
     /**
@@ -118,10 +119,12 @@ class AuthService
     public function userInfo()
     {
         $user = $this->loginUser(['id','username','nickname','avatar','avatar_url','email','phone','status','signed','dashboard','backend_setting','remark','login_ip','login_time','created_at']);
-        $menus = $this->menuService->getUserMenus();
+        $menus = $this->menuService->getUserMenus($user['id']);
+        $roles = $this->roleService->userRoleCodes($user['id']);
+        $menuCodes = $this->menuService->getUserMenuCodes($user['id']);
         $data = [
-            'codes' => ['*'], // TODO 从数据库查询用户对应的权限码
-            'roles' => ['superAdmin'], // TODO 从数据库查询用户对应的角色
+            'codes' => $menuCodes,
+            'roles' => $roles,
             'routers' => $menus,
             'user' => $user
         ];

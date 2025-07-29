@@ -7,8 +7,10 @@ use App\Controller\CrudController;
 use App\Model\Permission\Menu;
 use App\Request\Permission\MenuRequest;
 use App\Service\Permission\MenuService;
+use App\Service\Permission\PermissionCacheService;
 use App\Utils\Response;
 use App\Utils\Tree;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
@@ -20,8 +22,8 @@ use function FriendsOfHyperf\Helpers\logs;
 #[Controller('/api/admin/menu')]
 class MenuController extends CrudController
 {
-    
-   
+    #[Inject]
+    private PermissionCacheService $cacheService;
 
     public function __construct(MenuService $service){
         $this->service = $service;
@@ -57,7 +59,10 @@ class MenuController extends CrudController
     #[Auth('admin')]
     public function store()
     {
-        return parent::store();
+        $result = parent::store();
+        // 菜单创建后清理所有用户的菜单缓存
+        $this->cacheService->clearMenuCache();
+        return $result;
     }
 
     #[PutMapping(path: '{id}')]
@@ -65,7 +70,10 @@ class MenuController extends CrudController
     #[Auth('admin')]
     public function update(int $id)
     {
-        return parent::update($id);
+        $result = parent::update($id);
+        // 菜单更新后清理所有用户的菜单缓存
+        $this->cacheService->clearMenuCache();
+        return $result;
     }
 
     #[PostMapping(path: 'batch-delete')]
@@ -83,27 +91,13 @@ class MenuController extends CrudController
                 }
                 $this->service->delete($id);
             }
+            // 菜单删除后清理所有用户的菜单缓存
+            $this->cacheService->clearMenuCache();
             return Response::success(['ids' => $ids], '批量删除成功');
         } catch (\Throwable $th) {
             logs()->error($th->getMessage());
             return Response::error('批量删除失败');
         }
-    }
-
-
-    #[GetMapping(path: 'tree')]
-    #[Permission('permission:menu:tree', '菜单树', false, true)]
-    #[Auth('admin')]
-    public function menuTree()
-    {
-        $data =  Menu::query()
-        ->select(['id', 'parent_id', 'name as label', 'id as value']) // value 用 id
-        ->where('status', 1)
-        ->orderBy('sort')
-        ->get()
-        ->toArray();
-        $tree = Tree::build($data);
-        return Response::success($tree);
     }
 
 }
