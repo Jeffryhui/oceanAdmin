@@ -23,6 +23,7 @@ use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
 use Hyperf\HttpServer\Annotation\PutMapping;
 use Hyperf\HttpServer\Request;
+use HyperfExtension\Hashing\Hash;
 use Psr\Http\Message\ResponseInterface;
 use Qbhy\HyperfAuth\Annotation\Auth;
 
@@ -128,6 +129,7 @@ class SystemUserController extends CrudController
         $data = $this->validator->scene('store')->validated();
         $roleIDS = $data['role_ids'] ?? []; 
         unset($data['role_ids']);
+        $data['password'] = Hash::make($data['password']);
         $result = $this->service->create($data);
         if(!empty($roleIDS) && is_array($roleIDS)){
             $this->rbacService->assignRoles($result->id, $roleIDS);
