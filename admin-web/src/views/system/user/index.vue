@@ -1,10 +1,6 @@
 <template>
   <div class="ma-content-block lg:flex justify-between">
-    <div class="lg:w-2/12 pt-4 pl-2 pr-2">
-      <sa-tree-slider :data="depts" search-placeholder="搜索部门" @click="switchDept" v-model="defaultKey" />
-    </div>
-
-    <div class="lg:w-10/12 w-full">
+    <div class="w-full">
       <!-- CRUD 组件 -->
       <sa-table ref="crudRef" :options="options" :columns="columns" :searchForm="searchForm" @resetSearch="handleReset">
         <!-- 搜索区 tableSearch -->
@@ -62,7 +58,7 @@
             <a-link><icon-double-right /> 更多</a-link>
             <template #content>
               <a-doption value="updateCache" v-auth="['/core/user/clearCache']">更新缓存</a-doption>
-              <a-doption value="setHomePage" v-auth="['/core/user/setHomePage']">设置首页</a-doption>
+              <!-- <a-doption value="setHomePage" v-auth="['/core/user/setHomePage']">设置首页</a-doption> -->
               <a-doption value="resetPassword" v-auth="['/core/user/initUserPassword']">重置密码</a-doption>
             </template>
           </a-dropdown>
@@ -86,11 +82,9 @@
 <script setup>
 import { ref, onMounted, reactive, computed } from 'vue'
 import api from '@/api/system/user'
-import commonApi from '@/api/common'
 import { Message, Modal } from '@arco-design/web-vue'
 import EditForm from './edit.vue'
 
-const depts = ref([{ label: '所有部门', value: 0 }])
 const crudRef = ref()
 const editRef = ref()
 
@@ -106,21 +100,14 @@ const searchForm = ref({
   email: '',
   status: '',
   create_time: [],
-  dept_id: '',
 })
 
 // SaTable 重置搜索
 const handleReset = async () => {
   defaultKey.value = [0]
-  searchForm.value.dept_id = ''
 }
 
-// 部门切换
-const switchDept = (id) => {
-  searchForm.value.dept_id = id[0] === 0 ? '' : id[0]
-  crudRef.value.refresh()
-  defaultKey.value = id
-}
+
 
 // 修改状态
 const changeStatus = async (status, id) => {
@@ -157,7 +144,7 @@ const selectOperation = (value, id) => {
   if (value === 'resetPassword') {
     Modal.info({
       title: '提示',
-      content: '确定将该用户密码重置为 sai123456 吗？',
+      content: '确定将该用户密码重置为 123456 吗？',
       simple: false,
       onBeforeOk: (done) => {
         resetPassword(id)
@@ -195,6 +182,7 @@ const options = reactive({
     auth: ['/core/user/update'],
     func: async (record) => {
       editRef.value?.open('edit', record.id)
+      editRef.value?.setFormData(record)
     },
   },
   delete: {
@@ -218,16 +206,13 @@ const columns = reactive([
   { title: '手机', dataIndex: 'phone', width: 150 },
   { title: '邮箱', dataIndex: 'email', width: 200 },
   { title: '状态', dataIndex: 'status', width: 100 },
-  { title: '工作台', dataIndex: 'dashboard', width: 100 },
-  { title: '注册时间', dataIndex: 'create_time', width: 180 },
+  // { title: '工作台', dataIndex: 'dashboard', width: 100 },
+  { title: '注册时间', dataIndex: 'created_at', width: 180 },
 ])
 
 // 页面数据初始化
 const initPage = async () => {
-  const resp = await commonApi.commonGet('/core/dept/accessDept')
-  resp.data.map((item) => {
-    depts.value.push(item)
-  })
+  
 }
 
 // SaTable 数据刷新

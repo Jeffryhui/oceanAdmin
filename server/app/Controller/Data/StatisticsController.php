@@ -17,7 +17,7 @@ use Qbhy\HyperfAuth\Annotation\Auth;
 class StatisticsController extends BaseController
 {
     #[GetMapping(path: 'dashboard')]
-    #[Permission('admin:statistics:dashboard', '获取Dashboard统计数据', true,true)]
+    #[Permission('statistics:dashboard', '获取Dashboard统计数据', true,true)]
     #[Auth('admin')]
     public function dashboard()
     {
@@ -39,7 +39,7 @@ class StatisticsController extends BaseController
     }
 
     #[GetMapping(path: 'login-chart')]
-    #[Permission('admin:statistics:login-chart', '获取登录统计图表数据', true)]
+    #[Permission('statistics:login-chart', '获取登录统计图表数据', true,true)]
     #[Auth('admin')]
     public function loginChart()
     {

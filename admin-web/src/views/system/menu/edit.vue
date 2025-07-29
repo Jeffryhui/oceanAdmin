@@ -84,7 +84,7 @@ let title = computed(() => {
 // 表单初始值
 const initialFormData = {
   id: '',
-  parent_id: '',
+  parent_id: '0',
   name: '',
   type: 'M',
   icon: '',
@@ -129,6 +129,7 @@ const open = async (type = 'add') => {
 const initPage = async () => {
   const resp = await api.getList()
   menuData.value = resp.data
+  menuData.value.unshift({ id: '0', name: '顶级菜单', children: [] })
 }
 
 // 设置数据

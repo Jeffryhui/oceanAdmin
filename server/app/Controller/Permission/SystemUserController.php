@@ -3,30 +3,42 @@
 namespace App\Controller\Permission;
 
 use App\Annotation\Permission;
-use App\Controller\Controller as BaseController;
+use App\Controller\CrudController;
 use App\EsModel\LoginLog;
 use App\EsModel\OperateLog;
+use App\Model\Permission\Role;
 use App\Model\Permission\SystemUser;
+use App\Request\Permission\SystemUserRequest;
 use App\Request\System\UpdateUserRequest;
+use App\Service\Permission\RbacService;
 use App\Service\Permission\SystemUserService;
 use App\Utils\Response;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
+use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
 use Hyperf\HttpServer\Annotation\PostMapping;
+use Hyperf\HttpServer\Annotation\PutMapping;
 use Hyperf\HttpServer\Request;
+use Psr\Http\Message\ResponseInterface;
 use Qbhy\HyperfAuth\Annotation\Auth;
 
 #[Controller(prefix: '/api/admin/system-user')]
-class SystemUserController extends BaseController
+class SystemUserController extends CrudController
 {
 
-
-    public function __construct(private SystemUserService $systemUserService)
+    protected SystemUserService $systemUserService;
+    #[Inject]
+    private RbacService $rbacService;
+    public function __construct(SystemUserService $systemUserService)
     {
+        $this->service = $systemUserService;
+        $this->systemUserService = $systemUserService;
+        $this->validator = $this->container->get(SystemUserRequest::class);
     }
 
     #[GetMapping(path: 'login-log')]
-    #[Permission('admin:system-user:login-log', '获取用户登录日志', true, true)]
+    #[Permission('permission:user:login-log', '获取用户登录日志', true, true)]
     #[Auth('admin')]
     public function loginLog()
     {
@@ -45,7 +57,7 @@ class SystemUserController extends BaseController
     }
 
     #[GetMapping(path: 'operate-log')]
-    #[Permission('admin:system-user:operate-log', '获取用户操作日志', true, true)]
+    #[Permission('permission:user:operate-log', '获取用户操作日志', true, true)]
     #[Auth('admin')]
     public function operateLog()
     {
@@ -64,7 +76,7 @@ class SystemUserController extends BaseController
     }
 
     #[PostMapping(path: 'update-info')]
-    #[Permission('admin:system-user:update-info', '更新用户信息', true, true)]
+    #[Permission('permission:user:update-info', '更新用户信息', true, true)]
     #[Auth('admin')]
     public function updateInfo(Request $request)
     {
@@ -74,15 +86,136 @@ class SystemUserController extends BaseController
     }
 
     #[PostMapping(path: 'change-password')]
-    #[Permission('admin:system-user:change-password', '修改密码', true, true)]
+    #[Permission('permission:user:change-password', '修改密码', true, true)]
     #[Auth('admin')]
     public function changePassword(UpdateUserRequest $request)
     {
         $data = $request->validated();
         $result = $this->systemUserService->changePassword($data);
-        if(!$result){
+        if (!$result) {
             return Response::error('修改密码失败');
         }
         return Response::success([], '修改密码成功');
+    }
+
+    /**
+     * 获取用户列表
+     *
+     * @return ResponseInterface
+     */
+    #[GetMapping(path: 'list')]
+    #[Permission('permission:user:list', '获取用户列表', false, true)]
+    #[Auth('admin')]
+    public function list()
+    {
+        return parent::index();
+    }
+
+    #[PostMapping(path: 'store')]
+    #[Permission('permission:user:store', '创建用户', false, true)]
+    #[Auth('admin')]
+    public function store()
+    {
+        $data = $this->validator->scene('store')->validated();
+        $roleIDS = $data['role_ids'] ?? []; 
+        unset($data['role_ids']);
+        $result = $this->service->create($data);
+        if(!empty($roleIDS) && is_array($roleIDS)){
+            $this->rbacService->assignRoles($result->id, $roleIDS);
+        }
+        return Response::success(['id' => $result->id], '创建成功');
+    }
+
+    #[PutMapping(path: '{id}')]
+    #[Permission('permission:user:update', '更新用户', false, true)]
+    #[Auth('admin')]
+    public function update(int $id)
+    {
+        $data = $this->validator->scene('update')->validated();
+        $roleIDS = $data['role_ids'] ?? []; 
+        unset($data['role_ids']);
+        $result = $this->service->update($id, $data);
+        if(!$result){
+            return Response::error('更新失败');
+        }
+        if(!empty($roleIDS) && is_array($roleIDS)){
+            $this->rbacService->assignRoles($id, $roleIDS);
+        }
+        return Response::success(['id' => $id], '更新成功');
+    }
+
+    #[DeleteMapping(path: '{id}')]
+    #[Permission('permission:user:delete', '删除用户', false, true)]
+    #[Auth('admin')]
+    public function delete(int $id)
+    {
+        return parent::delete($id);
+    }
+
+    #[PostMapping(path: 'batch-delete')]
+    #[Permission('permission:user:batch-delete', '批量删除用户', false, true)]
+    #[Auth('admin')]
+    public function batchDelete()
+    {
+        return parent::batchDelete();
+    }
+
+
+    #[GetMapping(path: 'role-select')]
+    #[Permission('permission:user:role-select', '获取角色选择', false, true)]
+    #[Auth('admin')]
+    public function roleSelect()
+    {
+        $data = Role::query()->where('status', 1)->select(['name as label', 'id as value'])->get()->toArray();
+        return Response::success($data);
+    }
+
+    #[GetMapping(path: 'user-roles')]
+    #[Permission('permission:user:user-roles', '获取用户角色', false, true)]
+    #[Auth('admin')]
+    public function userRoles()
+    {
+        $id = $this->request->query('id',0);
+        if(empty($id)){
+            return Response::error('用户ID不能为空');
+        }
+        $user = SystemUser::find($id);
+        if(empty($user)){
+            return Response::error('用户不存在');
+        }
+        $roles = $user->roles()->get()->toArray();
+        return Response::success($roles);
+    }
+
+    #[PostMapping(path: 'change-status')]
+    #[Permission('permission:user:change-status', '修改用户状态', false, true)]
+    #[Auth('admin')]
+    public function changeStatus()
+    {
+       return parent::changeStatus();
+    }
+
+    #[PostMapping(path: 'update-cache')]
+    #[Permission('permission:user:update-cache', '更新缓存', false, true)]
+    #[Auth('admin')]
+    public function updateCache()
+    {
+        return Response::success([], '更新缓存成功');
+    }
+
+    #[PostMapping(path: 'init-password')]
+    #[Permission('permission:user:init-password', '初始化密码', false, true)]
+    #[Auth('admin')]
+    public function initPassword()
+    {
+        $id = $this->request->post('id',0);
+        if(empty($id)){
+            return Response::error('用户ID不能为空');
+        }
+        $result = $this->systemUserService->initPassword($id);
+        if(!$result){
+            return Response::error('初始化密码失败');
+        }
+        return Response::success([], '初始化密码成功');
     }
 }

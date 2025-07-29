@@ -68,4 +68,23 @@ class SystemUser extends Model implements Authenticatable
         }
         return env('APP_URL', 'http://localhost:9501').$value;
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role', 'system_user_id', 'role_id');
+    }
+
+    public function menus(){
+        return $this->roles()->with('menus')->get()->pluck('menus')->flatten();
+    }
+
+    public function hasMenu($code)
+    {
+        return $this->menus()->where('code', $code)->exists();
+    }
+
+    public function hasRole($code)
+    {
+        return $this->roles()->where('code', $code)->exists();
+    }
 }

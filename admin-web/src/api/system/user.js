@@ -7,7 +7,7 @@ export default {
    */
   getPageList(params = {}) {
     return request({
-      url: '/core/user/index',
+      url: '/admin/system-user/list',
       method: 'get',
       params
     })
@@ -19,7 +19,14 @@ export default {
    */
   read(id) {
     return request({
-      url: '/core/user/read?id=' + id,
+      url: '/admin/system-user/' + id,
+      method: 'get'
+    })
+  },
+
+  userRoles(id) {
+    return request({
+      url: '/admin/system-user/user-roles?id=' + id,
       method: 'get'
     })
   },
@@ -30,7 +37,7 @@ export default {
    */
   save(params = {}) {
     return request({
-      url: '/core/user/save',
+      url: '/admin/system-user/store',
       method: 'post',
       data: params
     })
@@ -42,8 +49,8 @@ export default {
    */
   destroy(data) {
     return request({
-      url: '/core/user/destroy',
-      method: 'delete',
+      url: '/admin/system-user/batch-delete',
+      method: 'post',
       data
     })
   },
@@ -54,7 +61,7 @@ export default {
    */
   update(id, data = {}) {
     return request({
-      url: '/core/user/update?id=' + id,
+      url: '/admin/system-user/' + id,
       method: 'put',
       data
     })
@@ -66,7 +73,7 @@ export default {
    */
   changeStatus(data = {}) {
     return request({
-      url: '/core/user/changeStatus',
+      url: '/admin/system-user/change-status',
       method: 'post',
       data
     })
@@ -78,7 +85,7 @@ export default {
    */
   clearCache(params = {}) {
     return request({
-      url: '/core/user/clearCache',
+      url: '/admin/system-user/update-cache',
       method: 'post',
       data: params
     })
@@ -90,7 +97,7 @@ export default {
    */
   setHomePage(data = {}) {
     return request({
-      url: '/core/user/setHomePage',
+      url: '/admin/system-user/set-home-page',
       method: 'post',
       data
     })
@@ -102,7 +109,7 @@ export default {
    */
   initUserPassword(data) {
     return request({
-      url: '/core/user/initUserPassword',
+      url: '/admin/system-user/init-password',
       method: 'post',
       data
     })

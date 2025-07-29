@@ -19,7 +19,7 @@ class UploadController extends BaseController
     ){}
 
     #[PostMapping('upload-image')]
-    #[Permission('admin:common:uploadImage', '上传图片', true, true)]
+    #[Permission('common:uploadImage', '上传图片', true, true)]
     #[Auth('admin')]
     public function uploadImg(Request $request)
     {

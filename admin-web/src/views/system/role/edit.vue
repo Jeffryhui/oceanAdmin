@@ -10,15 +10,6 @@
     @before-ok="submit">
     <!-- 表单信息 start -->
     <a-form ref="formRef" :model="formData" :rules="rules" :auto-label-width="true">
-      <a-form-item field="parent_id" label="上级角色">
-        <a-tree-select
-          v-model="formData.parent_id"
-          :data="roleData"
-          :field-names="{ key: 'value', title: 'label' }"
-          allow-clear
-          placeholder="请选择上级角色">
-        </a-tree-select>
-      </a-form-item>
       <a-form-item label="角色名称" field="name">
         <a-input v-model="formData.name" placeholder="请输入角色名称" />
       </a-form-item>
@@ -42,7 +33,6 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { Message } from '@arco-design/web-vue'
-import commonApi from '@/api/common'
 import tool from '@/utils/tool'
 import api from '@/api/system/role'
 
@@ -53,7 +43,6 @@ const formRef = ref()
 const mode = ref('')
 const visible = ref(false)
 const loading = ref(false)
-const roleData = ref([])
 
 let title = computed(() => {
   return '角色管理' + (mode.value == 'add' ? '-新增' : '-编辑')
@@ -62,8 +51,6 @@ let title = computed(() => {
 // 表单初始值
 const initialFormData = {
   id: '',
-  parent_id: '',
-  level: '',
   name: '',
   code: '',
   sort: 100,
@@ -76,7 +63,6 @@ const formData = reactive({ ...initialFormData })
 
 // 验证规则
 const rules = {
-  parent_id: [{ required: true, message: '上级角色不能为空' }],
   name: [{ required: true, message: '角色名称不能为空' }],
   code: [{ required: true, message: '角色标识不能为空' }],
 }
@@ -93,8 +79,7 @@ const open = async (type = 'add') => {
 
 // 初始化页面数据
 const initPage = async () => {
-  const resp = await commonApi.commonGet('/core/role/index?tree=true&filter=false')
-  roleData.value = resp.data
+ 
 }
 
 // 设置数据

@@ -24,14 +24,8 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item field="dept_id" label="所属部门">
-            <a-tree-select
-              v-model="formData.dept_id"
-              :data="deptData"
-              :field-names="{ key: 'value', title: 'label' }"
-              allow-clear
-              placeholder="请选择所属部门">
-            </a-tree-select>
+          <a-form-item field="email" label="邮箱">
+            <a-input v-model="formData.email" placeholder="请输入邮箱" />
           </a-form-item>
         </a-col>
       </a-row>
@@ -50,38 +44,12 @@
       <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item field="role_ids" label="角色">
-            <a-tree-select
-              v-model="formData.role_ids"
-              :data="roleData"
-              :field-names="{ key: 'value', title: 'label' }"
-              :tree-check-strictly="true"
-              allow-clear
-              tree-checkable
-              placeholder="请选择角色">
-            </a-tree-select>
+            <a-select v-model="formData.role_ids" :options="roleData" multiple placeholder="请选择角色" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
           <a-form-item field="phone" label="手机">
             <a-input v-model="formData.phone" placeholder="请输入手机" />
-          </a-form-item>
-        </a-col>
-      </a-row>
-      <a-row :gutter="16">
-        <a-col :span="12">
-          <a-form-item field="post_ids" label="岗位">
-            <a-select
-              v-model="formData.post_ids"
-              :options="postData"
-              :field-names="{ label: 'name', value: 'id' }"
-              multiple
-              allow-clear
-              placeholder="请选择岗位" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item field="email" label="邮箱">
-            <a-input v-model="formData.email" placeholder="请输入邮箱" />
           </a-form-item>
         </a-col>
       </a-row>
@@ -118,9 +86,7 @@ const formRef = ref()
 const mode = ref('')
 const visible = ref(false)
 const loading = ref(false)
-const deptData = ref([])
 const roleData = ref([])
-const postData = ref([])
 
 let title = computed(() => {
   return '用户管理' + (mode.value == 'add' ? '-新增' : '-编辑')
@@ -132,11 +98,9 @@ const initialFormData = {
   avatar: '',
   username: '',
   nickname: '',
-  dept_id: '',
   password: '',
   role_ids: [],
   phone: '',
-  post_ids: [],
   email: '',
   status: 1,
   remark: '',
@@ -148,7 +112,6 @@ const formData = reactive({ ...initialFormData })
 // 验证规则
 const rules = {
   username: [{ required: true, message: '账户不能为空' }],
-  dept_id: [{ required: true, message: '部门不能为空' }],
   role_ids: [{ required: true, message: '角色不能为空' }],
 }
 
@@ -161,12 +124,9 @@ const open = async (type = 'add', id = '') => {
   visible.value = true
   await initPage()
   if (type == 'edit') {
-    const { data } = await api.read(id)
-    if (data.postList) {
-      const post = data.postList.map((item) => item.id)
-      data.post_ids = post
-    }
-    const role = data.roleList.map((item) => item.id)
+    const { data } = await api.userRoles(id)
+    const role = data.map((item) => item.id)
+    console.log(role)
     data.role_ids = role
     data.password = ''
     setFormData(data)
@@ -175,14 +135,8 @@ const open = async (type = 'add', id = '') => {
 
 // 初始化页面数据
 const initPage = async () => {
-  const deptResp = await commonApi.commonGet('/core/dept/accessDept')
-  deptData.value = deptResp.data
-
-  const roleResp = await commonApi.commonGet('/core/role/accessRole')
+  const roleResp = await commonApi.commonGet('/admin/system-user/role-select')
   roleData.value = roleResp.data
-
-  const postResp = await commonApi.commonGet('/core/post/accessPost')
-  postData.value = postResp.data
 }
 
 // 设置数据

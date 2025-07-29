@@ -16,7 +16,7 @@ use Qbhy\HyperfAuth\Annotation\Auth;
 class LoginLogController extends BaseController
 {
     #[GetMapping(path: 'login-log')]
-    #[Permission('admin:monitor:login-log', '获取登录日志', false, true)]
+    #[Permission('monitor:login-log:list', '获取登录日志', false, true)]
     #[Auth('admin')]
     public function loginLog(Request $request)
     {

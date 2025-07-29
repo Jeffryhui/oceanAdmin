@@ -24,7 +24,7 @@ class DictTypeController extends CrudController
     }
 
     #[GetMapping(path: 'list')]
-    #[Permission( 'admin:dict:index',  '获取字典类型列表',false,true)]
+    #[Permission( 'data:dict-type:list',  '获取字典类型列表',false,true)]
     #[Auth('admin')]
     public function index()
     {
@@ -32,7 +32,7 @@ class DictTypeController extends CrudController
     }
 
     #[PostMapping(path: 'store')]
-    #[Permission( 'admin:dict:store',  '创建字典类型',false,true)]
+    #[Permission( 'data:dict-type:store',  '创建字典类型',false,true)]
     #[Auth('admin')]
     public function store()
     {
@@ -40,7 +40,7 @@ class DictTypeController extends CrudController
     }
 
     #[PutMapping(path: '{id}')]
-    #[Permission( 'admin:dict:update',  '更新字典类型',false,true)]
+    #[Permission( 'data:dict-type:update',  '更新字典类型',false,true)]
     #[Auth('admin')]
     public function update(int $id)
     {
@@ -48,7 +48,7 @@ class DictTypeController extends CrudController
     }
 
     #[DeleteMapping(path: '{id}')]
-    #[Permission( 'admin:dict:delete',  '删除字典类型',false,true)]
+    #[Permission( 'data:dict-type:delete',  '删除字典类型',false,true)]
     #[Auth('admin')]
     public function delete(int $id)
     {
@@ -56,7 +56,7 @@ class DictTypeController extends CrudController
     }
 
     #[PostMapping(path: 'batch-delete')]
-    #[Permission( 'admin:dict:batch-delete',  '批量删除字典类型',false,true)]
+    #[Permission( 'data:dict-type:batch-delete',  '批量删除字典类型',false,true)]
     #[Auth('admin')]
     public function batchDelete()
     {
@@ -64,7 +64,7 @@ class DictTypeController extends CrudController
     }
 
     #[PostMapping(path: 'change-status')]
-    #[Permission( 'admin:dict:change-status',  '更新字典类型状态',false,true)]
+    #[Permission( 'data:dict-type:change-status',  '更新字典类型状态',false,true)]
     #[Auth('admin')]
     public function changeStatus()
     {

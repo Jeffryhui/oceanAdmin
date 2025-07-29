@@ -15,7 +15,7 @@ use Qbhy\HyperfAuth\Annotation\Auth;
 class OperateController extends BaseController
 {
     #[GetMapping(path: 'operate-log')]
-    #[Permission('admin:monitor:operate-log', '获取操作日志', false, true)]
+    #[Permission('monitor:operate-log:list', '获取操作日志', false, true)]
     #[Auth('admin')]
     public function operateLog(Request $request)
     {

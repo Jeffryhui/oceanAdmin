@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import api from '@/api/system/role'
 import { Message } from '@arco-design/web-vue'
 import MenuPermission from './components/menuPermission.vue'
@@ -68,7 +68,6 @@ const openMenuList = (record) => {
 const options = reactive({
   api: api.getPageList,
   rowSelection: { showCheckedAll: true },
-  isExpand: true,
   operationColumnWidth: 220,
   add: {
     show: true,
@@ -112,6 +111,7 @@ const columns = reactive([
   { title: '角色标识', dataIndex: 'code', width: 180 },
   { title: '排序', dataIndex: 'sort', width: 150 },
   { title: '状态', dataIndex: 'status', type: 'dict', dict: 'data_status', width: 100 },
+  { title: '创建时间', dataIndex: 'created_at', width: 180 },
 ])
 
 // 页面数据初始化

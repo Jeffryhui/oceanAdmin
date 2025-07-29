@@ -2,8 +2,16 @@
 
 namespace App\Service\Permission;
 
-class MenuService
+use App\Model\Permission\Menu;
+use App\Service\BaseService;
+use App\Service\IService;
+
+class MenuService extends BaseService implements IService
 {
+    public function __construct(Menu $model)
+    {
+        $this->model = $model;
+    }
     public function getUserMenus()
     {
         // TODO 从数据库查询用户对应的菜单
@@ -57,22 +65,6 @@ class MenuService
                         ]
                     ],
                     [
-                        'id' => 1300,
-                        'parent_id' => 1000,
-                        'name' => 'permission/dept',
-                        'path' => '/permission/dept',
-                        'component' => 'system/dept/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '部门管理',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconMindMapping'
-                        ]
-                    ],
-                    [
                         'id' => 1400,
                         'parent_id' => 1000,
                         'name' => 'permission/role',
@@ -88,22 +80,6 @@ class MenuService
                             'icon' => 'IconLock'
                         ]
                     ],
-                    [
-                        'id' => 1500,
-                        'parent_id' => 1000,
-                        'name' => 'permission/post',
-                        'path' => '/permission/post',
-                        'component' => 'system/post/index',
-                        'redirect' => null,
-                        'meta' => [
-                            'title' => '岗位管理',
-                            'type' => 'M',
-                            'hidden' => false,
-                            'layout' => true,
-                            'hiddenBreadcrumb' => false,
-                            'icon' => 'IconTags'
-                        ]
-                    ]
                 ]
             ],
             [

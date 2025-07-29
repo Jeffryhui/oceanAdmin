@@ -16,7 +16,7 @@ class ServerController extends BaseController
     public function __construct(private ServerMonitor $serverMonitor){}
 
     #[GetMapping(path: 'server')]
-    #[Permission('admin:monitor:server', '获取服务器监控信息', false, true)]
+    #[Permission('monitor:server:info', '获取服务器监控信息', false, true)]
     #[Auth('admin')]
     public function server()
     {

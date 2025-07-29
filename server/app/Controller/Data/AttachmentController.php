@@ -23,7 +23,7 @@ class AttachmentController extends CrudController
 
 
     #[GetMapping(path: "list")]
-    #[Permission("attachment.list", "附件列表", false, true)]
+    #[Permission("data:attachment:list", "附件列表", false, true)]
     #[Auth('admin')]
     public function index()
     {
@@ -31,7 +31,7 @@ class AttachmentController extends CrudController
     }
 
     #[DeleteMapping(path: "{id}")]
-    #[Permission("attachment.delete", "删除附件", false, true)]
+    #[Permission("data:attachment:delete", "删除附件", false, true)]
     #[Auth('admin')]
     public function delete(int $id)
     {
@@ -39,7 +39,7 @@ class AttachmentController extends CrudController
     }
 
     #[PostMapping(path: "batch-delete")]
-    #[Permission("attachment.batch-delete", "批量删除附件", false, true)]
+    #[Permission("data:attachment:batch-delete", "批量删除附件", false, true)]
     #[Auth('admin')]
     public function batchDelete()
     {
@@ -47,7 +47,7 @@ class AttachmentController extends CrudController
     }
 
     #[GetMapping(path: "download")]
-    #[Permission("attachment.download", "下载附件", false, true)]
+    #[Permission("data:attachment:download", "下载附件", false, true)]
     #[Auth('admin')]
     public function downloadById()
     {

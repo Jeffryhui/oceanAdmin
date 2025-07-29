@@ -15,7 +15,7 @@ use function Ella123\HyperfCaptcha\captcha_create;
 class CaptchaController extends BaseController
 {
     #[GetMapping(path: 'captcha')]
-    #[Permission( 'admin:auth:captcha',  '后台获取验证码',true,false)]
+    #[Permission( 'auth:captcha',  '后台获取验证码',true,false)]
     public function getCaptcha():ResponseInterface
     {
         $data = captcha_create();

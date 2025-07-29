@@ -20,6 +20,8 @@ use Hyperf\Logger\LoggerFactory;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
+use function Hyperf\Support\env;
+
 #[Listener]
 class DbQueryExecutedListener implements ListenerInterface
 {
@@ -60,6 +62,9 @@ class DbQueryExecutedListener implements ListenerInterface
                 }
             }
 
+            if(env('APP_ENV') == 'dev'){
+                dump(sprintf('[%s] %s', $event->time, $sql));
+            }
             $this->logger->info(sprintf('[%s] %s', $event->time, $sql));
         }
     }

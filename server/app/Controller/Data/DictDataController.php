@@ -28,7 +28,7 @@ class DictDataController extends CrudController
     }
 
     #[GetMapping(path: 'all')]
-    #[Permission( 'admin:dict:all',  '获取所有字典',false,true)]
+    #[Permission( 'data:dict:all',  '获取所有字典',true,true)]
     #[Auth('admin')]
     public function all()
     {
@@ -37,7 +37,7 @@ class DictDataController extends CrudController
     }
 
     #[GetMapping(path: 'list')]
-    #[Permission( 'admin:dict:index',  '获取字典列表',false,true)]
+    #[Permission( 'data:dict:list',  '获取字典列表',false,true)]
     #[Auth('admin')]
     public function index()
     {
@@ -45,7 +45,7 @@ class DictDataController extends CrudController
     }
 
     #[PostMapping(path: 'store')]
-    #[Permission( 'admin:dict:store',  '创建字典',false,true)]
+    #[Permission( 'data:dict:store',  '创建字典',false,true)]
     #[Auth('admin')]
     public function store()
     {
@@ -53,7 +53,7 @@ class DictDataController extends CrudController
     }
 
     #[PutMapping(path: '{id}')]
-    #[Permission( 'admin:dict:update',  '更新字典',false,true)]
+    #[Permission( 'data:dict:update',  '更新字典',false,true)]
     #[Auth('admin')]
     public function update(int $id)
     {
@@ -61,7 +61,7 @@ class DictDataController extends CrudController
     }
 
     #[DeleteMapping(path: '{id}')]
-    #[Permission( 'admin:dict:delete',  '删除字典',false,true)]
+    #[Permission( 'data:dict:delete',  '删除字典',false,true)]
     #[Auth('admin')]
     public function delete(int $id)
     {
@@ -69,7 +69,7 @@ class DictDataController extends CrudController
     }
 
     #[PostMapping(path: 'batch-delete')]
-    #[Permission( 'admin:dict:batch-delete',  '批量删除字典',false,true)]
+    #[Permission( 'data:dict:batch-delete',  '批量删除字典',false,true)]
     #[Auth('admin')]
     public function batchDelete()
     {
@@ -77,7 +77,7 @@ class DictDataController extends CrudController
     }
 
     #[PostMapping(path: 'change-status')]
-    #[Permission( 'admin:dict:change-status',  '更新字典状态',false,true)]
+    #[Permission( 'data:dict:change-status',  '更新字典状态',false,true)]
     #[Auth('admin')]
     public function changeStatus()
     {

@@ -7,7 +7,7 @@ export default {
    */
   getPageList(params = {}) {
     return request({
-      url: '/core/role/index',
+      url: '/admin/role/list',
       method: 'get',
       params
     })
@@ -19,7 +19,7 @@ export default {
    */
   getMenuByRole(id) {
     return request({
-      url: '/core/role/getMenuByRole?id=' + id,
+      url: '/admin/role/role-menus?id=' + id,
       method: 'get'
     })
   },
@@ -41,7 +41,7 @@ export default {
    */
   save(data = {}) {
     return request({
-      url: '/core/role/save',
+      url: '/admin/role/store',
       method: 'post',
       data
     })
@@ -53,8 +53,8 @@ export default {
    */
   destroy(data) {
     return request({
-      url: '/core/role/destroy',
-      method: 'delete',
+      url: '/admin/role/batch-delete',
+      method: 'post',
       data
     })
   },
@@ -65,7 +65,7 @@ export default {
    */
   update(id, data = {}) {
     return request({
-      url: '/core/role/update?id=' + id,
+      url: '/admin/role/' + id,
       method: 'put',
       data
     })
@@ -77,23 +77,13 @@ export default {
    */
   updateMenuPermission(id, data) {
     return request({
-      url: '/core/role/menuPermission?id=' + id,
+      url: '/admin/role/assign-menus?id=' + id,
       method: 'post',
       data
     })
   },
 
-  /**
-   * 更新数据权限
-   * @returns
-   */
-  updateDataPermission(id, data) {
-    return request({
-      url: '/core/role/dataPermission?id=' + id,
-      method: 'post',
-      data
-    })
-  },
+  
 
   /**
    * 更改数据状态

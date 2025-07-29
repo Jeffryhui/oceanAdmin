@@ -106,7 +106,7 @@ const columns = reactive([
   { title: '排序', dataIndex: 'sort', width: 80 },
   { title: '隐藏', dataIndex: 'is_hidden', type: 'dict', dict: 'yes_or_no', width: 80 },
   { title: '状态', dataIndex: 'status', type: 'dict', dict: 'data_status', width: 80 },
-  { title: '创建时间', dataIndex: 'create_time', width: 180 },
+  { title: '创建时间', dataIndex: 'created_at', width: 180 },
 ])
 
 // 页面数据初始化
