@@ -10,7 +10,7 @@ export default {
    */
   getConfigList(params) {
     return request({
-      url: '/core/config/index',
+      url: '/admin/config/list',
       method: 'get',
       params
     })
@@ -22,8 +22,8 @@ export default {
    */
   destroy(data) {
     return request({
-      url: '/core/config/destroy',
-      method: 'delete',
+      url: '/admin/config/batch-delete',
+      method: 'post',
       data
     })
   },
@@ -34,7 +34,7 @@ export default {
    */
   save(data = {}) {
     return request({
-      url: '/core/config/save',
+      url: '/admin/config/store',
       method: 'post',
       data
     })
@@ -46,23 +46,12 @@ export default {
    */
   update(id, data = {}) {
     return request({
-      url: '/core/config/update?id=' + id,
+      url: '/admin/config/' + id,
       method: 'put',
       data
     })
   },
 
-  /**
-   * 按 keys 更新配置
-   * @returns
-   */
-  updateByKeys(data) {
-    return request({
-      url: '/core/config/updateByKeys',
-      method: 'post',
-      data
-    })
-  },
 
   /**
    * 批量修改配置值
@@ -70,7 +59,7 @@ export default {
    */
   batchUpdate(data) {
     return request({
-      url: '/core/config/batchUpdate',
+      url: '/admin/config/batch-update',
       method: 'post',
       data
     })
@@ -82,7 +71,7 @@ export default {
    */
   getConfigGroupList(params = {}) {
     return request({
-      url: '/core/configGroup/index',
+      url: '/admin/config-group/list',
       method: 'get',
       params
     })
@@ -94,7 +83,7 @@ export default {
    */
   saveConfigGroup(data = {}) {
     return request({
-      url: '/core/configGroup/save',
+      url: '/admin/config-group/store',
       method: 'post',
       data
     })
@@ -106,7 +95,7 @@ export default {
    */
   updateConfigGroup(id, data = {}) {
     return request({
-      url: '/core/configGroup/update?id=' + id,
+      url: '/admin/config-group/' + id,
       method: 'put',
       data
     })
@@ -118,8 +107,8 @@ export default {
    */
   deleteConfigGroup(data = {}) {
     return request({
-      url: '/core/configGroup/destroy',
-      method: 'delete',
+      url: '/admin/config-group/batch-delete',
+      method: 'post',
       data
     })
   },

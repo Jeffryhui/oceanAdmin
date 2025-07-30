@@ -136,10 +136,10 @@ const refresh = async () => {
 // 删除配置组
 const openDeleteModal = (data) => {
   const id = data.id
-  if (id == 1 || id == 2 || id == 3) {
-    Message.info('该配置为系统核心配置，无法删除')
-    return
-  }
+  // if (id == 1 || id == 2 || id == 3) {
+  //   Message.info('该配置为系统核心配置，无法删除')
+  //   return
+  // }
   deleteGroupData.value = configGroupData.value.find((item) => item.id == id)
   deleteVisible.value = true
 }
@@ -322,9 +322,9 @@ const deleteConfigGroup = async (done) => {
     done(false)
     return
   }
-  const response = await config.deleteConfigGroup({ ids: deleteGroupData.value.id })
+  const response = await config.deleteConfigGroup({ ids: [deleteGroupData.value.id] })
   if (response.code === 200) {
-    Message.success('配置删除成功')
+    Message.success('配置组删除成功')
     deleteGroupData.value = {}
     getConfigGroupList()
     done(true)
