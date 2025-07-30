@@ -3,52 +3,33 @@
 namespace App\Controller\Monitor;
 
 use App\Annotation\Permission;
-use App\Controller\Controller as BaseController;
-use App\EsModel\OperateLog;
-use App\Utils\Response;
+use App\Controller\CrudController;
+use App\Service\Monitor\OperateLogService;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
-use Hyperf\HttpServer\Request;
+use Hyperf\HttpServer\Annotation\PostMapping;
 use Qbhy\HyperfAuth\Annotation\Auth;
 
-#[Controller('/api/admin/monitor')]
-class OperateController extends BaseController
+#[Controller('/api/admin/operate-log')]
+class OperateController extends CrudController
 {
-    #[GetMapping(path: 'operate-log')]
+    public function __construct(OperateLogService $operateLogService)
+    {
+        $this->service = $operateLogService;
+    }
+    #[GetMapping(path: 'list')]
     #[Permission('monitor:operate-log:list', '获取操作日志', false, true)]
     #[Auth('admin')]
-    public function operateLog(Request $request)
+    public function index()
     {
-        $page = $request->input('page', 1);
-        $pageSize = $request->input('limit', 10);
-        $params = $request->query();
-        $query = OperateLog::query();
-        if(isset($params['username']) && !empty($params['username'])){
-            $query->where('username',$params['username']);
-        }
-        if(isset($params['service_name']) && !empty($params['service_name'])){
-            // 使用keyword字段进行精确匹配，或者text字段进行模糊匹配
-            if (strpos($params['service_name'], '%') !== false) {
-                // 包含通配符，使用text字段模糊匹配
-                $query->where('service_name', 'like', $params['service_name']);
-            } else {
-                // 精确匹配，使用keyword字段
-                $query->where('service_name.keyword', '=', $params['service_name']);
-            }
-        }
-        if(isset($params['ip']) && !empty($params['ip'])){
-            $query->where('ip',$params['ip']);
-        }
-        if(isset($params['create_time']) && !empty($params['create_time']) && is_array($params['create_time'])){
-            $query->whereBetween('operate_time',[strtotime($params['create_time'][0]),strtotime($params['create_time'][1])]);
-        }
-        $result = $query->orderBy('operate_time',true)->page($pageSize,$page);
-        return Response::success([
-            'current_page' => $result->currentPage(),
-            'data' => $result->items(),
-            'has_more' => $result->hasMorePages(),
-            'per_page' => $result->perPage(),
-            'total' => $result->total(),
-        ]);
+        return parent::index();
+    }
+
+    #[PostMapping(path: 'batch-delete')]
+    #[Permission('monitor:operate-log:batch-delete', '批量删除操作日志', false, true)]
+    #[Auth('admin')]
+    public function batchDelete()
+    {
+        return parent::batchDelete();
     }
 }

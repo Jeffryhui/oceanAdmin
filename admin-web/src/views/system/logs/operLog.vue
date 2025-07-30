@@ -42,14 +42,26 @@ const searchForm = ref({
   service_name: '',
   ip: '',
   create_time: [],
+  order_field: 'created_at',
+  order_type: 'desc',
 })
 
 // SaTable 基础配置
 const options = reactive({
   api: operLog.getPageList,
-  rowSelection: false,
-  delete: false,
-  operationColumn:false,
+  rowSelection: { showCheckedAll: true },
+  operationColumnWidth: 100,
+  delete: {
+    show: true,
+    auth: ['/core/logs/deleteOperLog'],
+    func: async (params) => {
+      const resp = await operLog.destroy(params)
+      if (resp.code === 200) {
+        Message.success(`删除成功！`)
+        crudRef.value?.refresh()
+      }
+    },
+  },
 })
 
 // SaTable 列配置
@@ -59,7 +71,7 @@ const columns = reactive([
   { title: '路由', dataIndex: 'router', width: 240 },
   { title: '操作IP', dataIndex: 'ip', width: 150 },
   { title: '操作地点', dataIndex: 'ip_location', width: 150 },
-  { title: '操作时间', dataIndex: 'create_time', width: 180 },
+  { title: '操作时间', dataIndex: 'created_at', width: 180 },
 ])
 
 // 页面数据初始化

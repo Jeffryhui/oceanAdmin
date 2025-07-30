@@ -2,8 +2,8 @@
 
 namespace App\Service\Auth;
 
-use App\EsModel\LoginLog;
 use App\Exception\BusinessException;
+use App\Model\Monitor\LoginLog;
 use App\Model\Permission\SystemUser;
 use App\Service\Permission\MenuService;
 use App\Service\Permission\RoleService;
@@ -40,8 +40,7 @@ class AuthService
             'os' => $os['full'],
             'status' => $status,
             'message' => $message,
-            'login_time' => date('Y-m-d H:i:s'),
-            'create_time' => time(),
+            'login_time' => Carbon::now(),
         ];
         $res = LoginLog::query()->create($data);
         return $res;

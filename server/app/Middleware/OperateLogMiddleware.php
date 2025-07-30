@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Annotation\Permission;
-use App\EsModel\OperateLog;
+use App\Model\Monitor\OperateLog;
 use App\Model\Permission\SystemUser;
 use App\Utils\IpLocationUtils;
 use Hyperf\Di\Annotation\AnnotationCollector;
@@ -57,8 +57,6 @@ class OperateLogMiddleware implements MiddlewareInterface
             'ip_location' => $this->ipLocationUtils->getSimpleLocation($ip),
             'request_data' => json_encode($requestData),
             'remark' => sprintf('完整url: %s,请求参数: %s', $request->getUri()->getPath(), json_encode($requestData)),
-            'create_time' => date('Y-m-d H:i:s'),
-            'operate_time' => time(),
         ];
         OperateLog::query()->create($data);
         return $handler->handle($request);

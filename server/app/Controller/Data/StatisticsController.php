@@ -4,9 +4,10 @@ namespace App\Controller\Data;
 
 use App\Annotation\Permission;
 use App\Controller\Controller as BaseController;
-use App\EsModel\LoginLog;
-use App\EsModel\OperateLog;
+
 use App\Model\Data\Attachment;
+use App\Model\Monitor\LoginLog;
+use App\Model\Monitor\OperateLog;
 use App\Model\Permission\SystemUser;
 use App\Utils\Response;
 use Hyperf\HttpServer\Annotation\Controller;
@@ -26,8 +27,8 @@ class StatisticsController extends BaseController
          */
         $user = auth('admin')->user();
         $userCount = SystemUser::query()->count();
-        $loginCount = LoginLog::query()->where('username',$user->username)->where('status',LoginLog::STATUS_SUCCESS)->get(1000)->count();
-        $operateCount = OperateLog::query()->where('username',$user->username)->get(1000)->count();
+        $loginCount = LoginLog::query()->where('username',$user->username)->where('status',LoginLog::STATUS_SUCCESS)->count();
+        $operateCount = OperateLog::query()->where('username',$user->username)->count();
         $attachmentCount = Attachment::query()->count();
         $data = [
             'user' => $userCount, // 用户总数
@@ -62,8 +63,7 @@ class StatisticsController extends BaseController
             $count = LoginLog::query()
                 ->where('status', LoginLog::STATUS_SUCCESS)
                 ->where('username',$user->username)
-                ->whereBetween('create_time', [strtotime($startTime), strtotime($endTime)])
-                ->get(10000) 
+                ->whereBetween('created_at', [strtotime($startTime), strtotime($endTime)])
                 ->count();
             
             $loginCounts[] = $count;

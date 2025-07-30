@@ -10,7 +10,7 @@ export default {
    */
   getPageList(params = {}) {
     return request({
-      url: '/admin/monitor/operate-log',
+      url: '/admin/operate-log/list',
       method: 'get',
       params
     })
@@ -22,8 +22,8 @@ export default {
    */
   destroy(data) {
     return request({
-      url: '/core/logs/deleteOperLog',
-      method: 'delete',
+      url: '/admin/operate-log/batch-delete',
+      method: 'post',
       data
     })
   }

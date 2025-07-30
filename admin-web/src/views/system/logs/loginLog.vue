@@ -52,14 +52,26 @@ const searchForm = ref({
   username: '',
   status: '',
   login_time: [],
+  order_field: 'login_time',
+  order_type: 'desc',
 })
 
 // SaTable 基础配置
 const options = reactive({
   api: loginLog.getPageList,
-  rowSelection: false,
-  delete: false,
-  operationColumn:false,
+  rowSelection: { showCheckedAll: true },
+  operationColumnWidth: 100,
+  delete: {
+    show: true,
+    auth: ['/core/logs/deleteLoginLog'],
+    func: async (params) => {
+      const resp = await loginLog.destroy(params)
+      if (resp.code === 200) {
+        Message.success(`删除成功！`)
+        crudRef.value?.refresh()
+      }
+    },
+  },
 })
 
 // SaTable 列配置

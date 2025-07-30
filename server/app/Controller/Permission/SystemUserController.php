@@ -4,16 +4,14 @@ namespace App\Controller\Permission;
 
 use App\Annotation\Permission;
 use App\Controller\CrudController;
-use App\EsModel\LoginLog;
-use App\EsModel\OperateLog;
+use App\Model\Monitor\LoginLog;
+use App\Model\Monitor\OperateLog;
 use App\Model\Permission\Role;
 use App\Model\Permission\SystemUser;
 use App\Request\Permission\SystemUserRequest;
 use App\Request\System\UpdateUserRequest;
-use App\Service\Permission\MenuService;
 use App\Service\Permission\PermissionCacheService;
 use App\Service\Permission\RbacService;
-use App\Service\Permission\RoleService;
 use App\Service\Permission\SystemUserService;
 use App\Utils\Response;
 use Hyperf\Di\Annotation\Inject;
@@ -32,10 +30,6 @@ class SystemUserController extends CrudController
 {
 
     protected SystemUserService $systemUserService;
-    #[Inject]
-    private MenuService $menuService;
-    #[Inject]
-    private RoleService $roleService;
     #[Inject]
     private RbacService $rbacService;
     #[Inject]
@@ -56,7 +50,7 @@ class SystemUserController extends CrudController
          * @var SystemUser $user
          */
         $user = auth('admin')->user();
-        $loginLogs = LoginLog::query()->where('username', $user->username)->orderBy('create_time', true)->page(5);
+        $loginLogs = LoginLog::query()->where('username', $user->username)->orderBy('login_time', 'desc')->paginate(5);
         return Response::success([
             'data' => $loginLogs->items(),
             'current_page' => $loginLogs->currentPage(),
@@ -75,7 +69,7 @@ class SystemUserController extends CrudController
          * @var SystemUser $user
          */
         $user = auth('admin')->user();
-        $operateLogs = OperateLog::query()->where('username', $user->username)->orderBy('operate_time', true)->page(5);
+        $operateLogs = OperateLog::query()->where('username', $user->username)->orderBy('created_at', 'desc')->paginate(5);
         return Response::success([
             'data' => $operateLogs->items(),
             'current_page' => $operateLogs->currentPage(),
