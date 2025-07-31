@@ -63,7 +63,7 @@ const options = reactive({
   operationColumnWidth: 100,
   delete: {
     show: true,
-    auth: ['/core/logs/deleteLoginLog'],
+    auth: ['monitor:login-log:batch-delete'],
     func: async (params) => {
       const resp = await loginLog.destroy(params)
       if (resp.code === 200) {

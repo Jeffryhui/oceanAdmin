@@ -71,7 +71,7 @@ const options = reactive({
   singleLine: true,
   add: {
     show: true,
-    auth: ['/core/config/save'],
+    auth: ['config-group:store'],
     func: async () => {
       editRef.value?.open()
       editRef.value?.setFormData({ group_id: searchForm.value.group_id })
@@ -79,7 +79,7 @@ const options = reactive({
   },
   edit: {
     show: true,
-    auth: ['/core/config/update'],
+    auth: ['config-group:update'],
     func: async (record) => {
       editRef.value?.open('edit')
       editRef.value?.setFormData(record)
@@ -87,7 +87,7 @@ const options = reactive({
   },
   delete: {
     show: true,
-    auth: ['/core/config/destroy'],
+    auth: ['config-group:batch-delete'],
     func: async (params) => {
       const resp = await api.destroy(params)
       if (resp.code === 200) {

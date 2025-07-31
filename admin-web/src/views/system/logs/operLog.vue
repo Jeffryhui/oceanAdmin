@@ -53,7 +53,7 @@ const options = reactive({
   operationColumnWidth: 100,
   delete: {
     show: true,
-    auth: ['/core/logs/deleteOperLog'],
+    auth: ['monitor:operate-log:batch-delete'],
     func: async (params) => {
       const resp = await operLog.destroy(params)
       if (resp.code === 200) {

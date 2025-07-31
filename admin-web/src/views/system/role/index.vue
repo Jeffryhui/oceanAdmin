@@ -29,7 +29,7 @@
       <!-- 操作前置扩展 -->
       <template #operationBeforeExtend="{ record }">
         <a-space size="mini" v-if="record.id > 1 && !record.disabled">
-          <a-link v-auth="['/core/role/menuPermission']" @click="openMenuList(record)"> <icon-menu /> 菜单权限 </a-link>
+          <a-link v-auth="['permission:role:assign-menus']" @click="openMenuList(record)"> <icon-menu /> 菜单权限 </a-link>
         </a-space>
       </template>
     </sa-table>
@@ -71,14 +71,14 @@ const options = reactive({
   operationColumnWidth: 220,
   add: {
     show: true,
-    auth: ['/core/role/save'],
+    auth: ['permission:role:store'],
     func: async () => {
       editRef.value?.open()
     },
   },
   edit: {
     show: true,
-    auth: ['/core/role/update'],
+    auth: ['permission:role:update'],
     func: async (record) => {
       if (record.id === 1) {
         Message.error('超级管理员角色不可编辑')
@@ -90,7 +90,7 @@ const options = reactive({
   },
   delete: {
     show: true,
-    auth: ['/core/role/destroy'],
+    auth: ['permission:role:batch-delete'],
     func: async (params) => {
       if (params.ids.includes(1)) {
         Message.error('超级管理员角色不可删除')

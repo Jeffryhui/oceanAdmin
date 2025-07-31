@@ -191,7 +191,7 @@ const options = reactive({
   singleLine: true,
   delete: {
     show: true,
-    auth: ['/core/attachment/destroy'],
+    auth: ['data:attachment:batch-delete'],
     func: async (params) => {
       const resp = await api.destroy(params)
       if (resp.code === 200) {

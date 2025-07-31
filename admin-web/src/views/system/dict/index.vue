@@ -34,7 +34,7 @@
 
       <!-- 操作前置扩展 -->
       <template #operationBeforeExtend="{ record }">
-        <a-link v-auth="['/core/dictType/save']" @click="openDictList(record)"><icon-list /> 字典数据</a-link>
+        <a-link v-auth="['data:dict-type:store']" @click="openDictList(record)"><icon-list /> 字典数据</a-link>
       </template>
     </sa-table>
 
@@ -87,14 +87,14 @@ const options = reactive({
   operationColumnWidth: 240,
   add: {
     show: true,
-    auth: ['/core/dictType/save'],
+    auth: ['data:dict-type:store'],
     func: async () => {
       editRef.value?.open()
     },
   },
   edit: {
     show: true,
-    auth: ['/core/dictType/update'],
+    auth: ['data:dict-type:update'],
     func: async (record) => {
       editRef.value?.open('edit')
       editRef.value?.setFormData(record)
@@ -102,7 +102,7 @@ const options = reactive({
   },
   delete: {
     show: true,
-    auth: ['/core/dictType/destroy'],
+    auth: ['data:dict-type:batch-delete'],
     func: async (params) => {
       const resp = await dictType.destroy(params)
       if (resp.code === 200) {

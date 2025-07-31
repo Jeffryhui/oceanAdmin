@@ -28,7 +28,7 @@
       </template>
       <!-- 操作前置扩展 -->
       <template #operationBeforeExtend="{ record }">
-        <a-link @click="openAdd(record.id)" v-if="record.type === 'M'" v-auth="['/core/menu/save']">
+        <a-link @click="openAdd(record.id)" v-if="record.type === 'M'" v-auth="['permission:menu:store']">
           <icon-plus /> 新增
         </a-link>
       </template>
@@ -68,14 +68,14 @@ const options = reactive({
   operationColumnWidth: 200,
   add: {
     show: true,
-    auth: ['/core/menu/save'],
+    auth: ['permission:menu:store'],
     func: async () => {
       editRef.value?.open()
     },
   },
   edit: {
     show: true,
-    auth: ['/core/menu/update'],
+    auth: ['permission:menu:update'],
     func: async (record) => {
       editRef.value?.open('edit')
       editRef.value?.setFormData(record)
@@ -83,7 +83,7 @@ const options = reactive({
   },
   delete: {
     show: true,
-    auth: ['/core/menu/destroy'],
+    auth: ['permission:menu:batch-delete'],
     func: async (params) => {
       const resp = await api.destroy(params)
       if (resp.code === 200) {

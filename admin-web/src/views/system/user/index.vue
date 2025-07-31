@@ -57,9 +57,9 @@
           <a-dropdown trigger="hover" v-if="record.id != 1" @select="selectOperation($event, record.id)">
             <a-link><icon-double-right /> 更多</a-link>
             <template #content>
-              <a-doption value="updateCache" v-auth="['/core/user/clearCache']">更新缓存</a-doption>
-              <!-- <a-doption value="setHomePage" v-auth="['/core/user/setHomePage']">设置首页</a-doption> -->
-              <a-doption value="resetPassword" v-auth="['/core/user/initUserPassword']">重置密码</a-doption>
+              <a-doption value="updateCache" v-auth="['permission:user:update-cache']">更新缓存</a-doption>
+              <!-- <a-doption value="setHomePage" v-auth="['permission:user:set-home-page']">设置首页</a-doption> -->
+              <a-doption value="resetPassword" v-auth="['permission:user:init-password']">重置密码</a-doption>
             </template>
           </a-dropdown>
         </template>
@@ -172,14 +172,14 @@ const options = reactive({
   operationColumnWidth: 210,
   add: {
     show: true,
-    auth: ['/core/user/save'],
+    auth: ['permission:user:store'],
     func: async () => {
       editRef.value?.open()
     },
   },
   edit: {
     show: true,
-    auth: ['/core/user/update'],
+    auth: ['permission:user:update'],
     func: async (record) => {
       editRef.value?.open('edit', record.id)
       editRef.value?.setFormData(record)
@@ -187,7 +187,7 @@ const options = reactive({
   },
   delete: {
     show: true,
-    auth: ['/core/user/destroy'],
+    auth: ['permission:user:batch-delete'],
     func: async (params) => {
       const resp = await api.destroy(params)
       if (resp.code === 200) {

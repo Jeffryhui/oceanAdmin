@@ -84,7 +84,7 @@ const options = reactive({
   singleLine: true,
   add: {
     show: true,
-    auth: ['/core/dictType/save'],
+    auth: ['data:dict-type:store'],
     func: async () => {
       editRef.value?.open()
       editRef.value?.setFormData({ type_id: searchForm.value.type_id, code: searchForm.value.code })
@@ -92,7 +92,7 @@ const options = reactive({
   },
   edit: {
     show: true,
-    auth: ['/core/dictType/update'],
+    auth: ['data:dict-type:update'],
     func: async (record) => {
       editRef.value?.open('edit')
       editRef.value?.setFormData(record)
@@ -100,7 +100,7 @@ const options = reactive({
   },
   delete: {
     show: true,
-    auth: ['/core/dictType/destroy'],
+    auth: ['data:dict-type:batch-delete'],
     func: async (params) => {
       const resp = await dict.destroyDictData(params)
       if (resp.code === 200) {

@@ -6,7 +6,7 @@
           <div class="flex justify-between items-center" :style="{ height: '30px' }">
             <span>配置分组</span>
             <a-tooltip content="添加组">
-              <a-button shape="round" size="small" @click="addGroupModal" type="primary" v-auth="['/core/config/save']">
+              <a-button shape="round" size="small" @click="addGroupModal" type="primary" v-auth="['config-group:store']">
                 <template #icon><icon-plus /></template>
               </a-button>
             </a-tooltip>
@@ -18,12 +18,12 @@
               {{ item.name }}({{ item.code }})
             </a-button>
             <div class="flex">
-              <a-link v-auth="['/core/config/update']" @click="editGroupModal(item)">
+              <a-link v-auth="['config:update']" @click="editGroupModal(item)">
                 <template #icon>
                   <icon-edit />
                 </template>
               </a-link>
-              <a-link v-auth="['/core/config/destroy']" @click="openDeleteModal(item)">
+              <a-link v-auth="['config:batch-delete']" @click="openDeleteModal(item)">
                 <template #icon>
                   <icon-delete />
                 </template>
@@ -38,7 +38,7 @@
       <!-- CRUD 组件 -->
       <a-card :title="title" :loading="loading" :header-style="{ height: '45px' }">
         <template #extra>
-          <a-button type="primary" shape="circle" v-auth="['/core/config/index']" @click="manageConfigModal()">
+          <a-button type="primary" shape="circle" v-auth="['config:list']" @click="manageConfigModal()">
             <icon-settings />
           </a-button>
         </template>
@@ -273,7 +273,7 @@ const handleSelect = async (val, ele) => {
 
 // 修改配置
 const submit = async (params) => {
-  if (!auth('/core/config/save')) {
+  if (!auth('config-group:store')) {
     Message.info('没有权限修改配置')
     return
   }
