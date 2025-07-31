@@ -63,7 +63,7 @@ class StatisticsController extends BaseController
             $count = LoginLog::query()
                 ->where('status', LoginLog::STATUS_SUCCESS)
                 ->where('username',$user->username)
-                ->whereBetween('created_at', [strtotime($startTime), strtotime($endTime)])
+                ->whereBetween('created_at', [$startTime, $endTime])
                 ->count();
             
             $loginCounts[] = $count;
