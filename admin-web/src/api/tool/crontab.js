@@ -10,7 +10,7 @@ export default {
    */
   getPageList(params = {}) {
     return request({
-      url: '/tool/crontab/index',
+      url: '/admin/crontab/list',
       method: 'get',
       params
     })
@@ -69,7 +69,7 @@ export default {
    */
   save(data = {}) {
     return request({
-      url: '/tool/crontab/save',
+      url: '/admin/crontab/store',
       method: 'post',
       data
     })
@@ -81,8 +81,8 @@ export default {
    */
   destroy(data) {
     return request({
-      url: '/tool/crontab/destroy',
-      method: 'delete',
+      url: '/admin/crontab/batch-delete',
+      method: 'post',
       data
     })
   },
@@ -93,7 +93,7 @@ export default {
    */
   update(id, params = {}) {
     return request({
-      url: '/tool/crontab/update?id=' + id,
+      url: '/admin/crontab/' + id,
       method: 'put',
       data: params
     })
@@ -105,7 +105,7 @@ export default {
    */
   changeStatus(data = {}) {
     return request({
-      url: '/tool/crontab/changeStatus',
+      url: '/admin/crontab/change-status',
       method: 'post',
       data
     })

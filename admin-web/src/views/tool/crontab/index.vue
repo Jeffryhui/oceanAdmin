@@ -65,13 +65,14 @@ const searchForm = ref({
   name: '',
   type: '',
   status: '',
+  order_field: 'created_at',
+  order_type: 'desc',
 })
 
 // 类型字典
 const types = [
-  { label: 'URL任务GET', value: 1 },
-  { label: 'URL任务POST', value: 2 },
-  { label: '类任务', value: 3 },
+  { label: 'URL任务GET', value: 'url' },
+  { label: '类任务', value: 'class' },
 ]
 
 // 修改状态
@@ -137,7 +138,7 @@ const columns = reactive([
   { title: '定时规则', dataIndex: 'rule', width: 260 },
   { title: '调用目标', dataIndex: 'target', width: 260 },
   { title: '状态', dataIndex: 'status', dict: 'data_status', width: 120 },
-  { title: '创建时间', dataIndex: 'create_time', width: 180 },
+  { title: '创建时间', dataIndex: 'created_at', width: 180 },
 ])
 
 // 页面数据初始化

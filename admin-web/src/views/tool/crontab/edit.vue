@@ -62,11 +62,27 @@
       <a-form-item label="调用目标" field="target">
         <a-textarea v-model="formData.target" placeholder="请输入调用目标" />
       </a-form-item>
-      <a-form-item label="任务参数" field="parameter">
+      <!-- <a-form-item label="任务参数" field="parameter">
         <a-textarea v-model="formData.parameter" placeholder="请输入任务参数" />
-      </a-form-item>
+      </a-form-item> -->
       <a-form-item label="状态" field="status">
         <sa-radio v-model="formData.status" dict="data_status" placeholder="请选择状态" />
+      </a-form-item>
+      <a-form-item label="是否单机执行" field="is_on_one_server">
+        <sa-switch
+          v-model="formData.is_on_one_server"
+          checkedValue="1"
+          uncheckedValue="0"
+          checkedText="是"
+          uncheckedText="否" />
+      </a-form-item>
+      <a-form-item label="是否单例任务" field="is_singleton">
+        <sa-switch
+          v-model="formData.is_singleton"
+          checkedValue="1"
+          uncheckedValue="0"
+          checkedText="是"
+          uncheckedText="否" />
       </a-form-item>
       <a-form-item label="备注" field="remark">
         <a-textarea v-model="formData.remark" placeholder="请输入备注" />
@@ -96,9 +112,8 @@ let title = computed(() => {
 })
 
 const types = [
-  { label: 'URL任务GET', value: 1 },
-  { label: 'URL任务POST', value: 2 },
-  { label: '类任务', value: 3 },
+  { label: 'URL任务GET', value: 'url' },
+  { label: '类任务', value: 'class' },
 ]
 
 // 表单初始值
@@ -115,9 +130,11 @@ const initialFormData = {
   minute: 1,
   second: 1,
   target: '',
-  parameter: '',
+  // parameter: '',
   status: 1,
   remark: '',
+  is_on_one_server: 1,
+  is_singleton: 1,
 }
 
 // 表单信息
