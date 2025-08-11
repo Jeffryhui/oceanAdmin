@@ -52,7 +52,7 @@ class CrontabProcessStartedListener implements ListenerInterface
         // logs()->info('当前数据库中的定时任务：', ['count' => count($crontabs)]);
         
         // 获取所有已注册的任务
-        $registeredTasks = $this->crontabManager->getCrontabs();
+        // $registeredTasks = $this->crontabManager->getCrontabs();
         // logs()->info('当前已注册的定时任务：', ['count' => count($registeredTasks)]);
         
         // 当前有效的任务名称
