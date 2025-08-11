@@ -22,7 +22,7 @@ export default {
    */
   getLogPageList(params = {}) {
     return request({
-      url: '/tool/crontab/logPageList',
+      url: '/admin/crontab/log-list',
       method: 'get',
       params
     })
@@ -34,8 +34,8 @@ export default {
    */
   deleteLog(data) {
     return request({
-      url: '/tool/crontab/deleteCrontabLog',
-      method: 'delete',
+      url: '/admin/crontab/batch-delete-logs',
+      method: 'post',
       data
     })
   },
@@ -46,7 +46,7 @@ export default {
    */
   run(data = {}) {
     return request({
-      url: '/tool/crontab/run',
+      url: '/admin/crontab/run',
       method: 'post',
       data
     })

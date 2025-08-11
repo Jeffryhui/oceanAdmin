@@ -4,10 +4,14 @@ namespace App\Controller\Tool;
 
 use App\Annotation\Permission;
 use App\Controller\CrudController;
+use App\Cron\Crontab;
 use App\Exception\BusinessException;
+use App\Model\Tool\CrontabLog;
 use App\Request\Tool\CrontabRequest;
 use App\Service\Tool\CrontabService;
 use App\Utils\Response;
+use Hyperf\Crontab\Strategy\Executor;
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\DeleteMapping;
 use Hyperf\HttpServer\Annotation\GetMapping;
@@ -18,6 +22,8 @@ use Qbhy\HyperfAuth\Annotation\Auth;
 #[Controller('/api/admin/crontab')]
 class CrontabController extends CrudController
 {
+    #[Inject]
+    protected Executor $executor;
     public function __construct(CrontabService $service)
     {
         $this->service = $service;
@@ -138,5 +144,49 @@ class CrontabController extends CrudController
     public function changeStatus()
     {
         return parent::changeStatus();
+    }
+
+    #[GetMapping('log-list')]
+    #[Permission('tool:crontab:log-list','定时任务日志列表',false,true)]
+    #[Auth('admin')]
+    public function crontabLogList()
+    {
+        $crontabId = $this->request->query('crontab_id',0);
+        $limit = $this->request->query('limit', 20);
+        $orderField = $this->request->query('order_field', 'id');
+        $orderType = $this->request->query('order_type', 'desc');
+        $query = CrontabLog::query();
+        $query= $query->where('crontab_id',$crontabId)->orderBy($orderField, $orderType);
+        $list = $query->paginate($limit);
+        return Response::paginate($list);
+    }
+
+    #[PostMapping('batch-delete-logs')]
+    #[Permission('tool:crontab:batch-delete-logs','批量删除定时任务日志',false,true)]
+    #[Auth('admin')]
+    public function batchDeleteLogs()
+    {
+        $ids = $this->request->post('ids', []);
+        if (empty($ids)) {
+            return Response::error('请选择要删除的日志');   
+        }
+        $result = CrontabLog::query()->whereIn('id', $ids)->delete();
+        if (!$result) {
+            return Response::error('删除定时任务日志失败');
+        }
+        return Response::success(null);
+    }
+
+    #[PostMapping('run')]
+    #[Permission('tool:crontab:run','执行定时任务',false,true)]
+    #[Auth('admin')]
+    public function run()
+    {
+        $id = $this->request->post('id', 0);
+        if (!$id) {
+            return Response::error('请选择要执行的定时任务');
+        }
+        $this->executor->execute(new Crontab($id));
+        return Response::success(null);
     }
 }

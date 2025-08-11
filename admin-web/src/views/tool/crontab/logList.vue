@@ -42,12 +42,12 @@ const open = (id) => {
 
 // 查看信息
 const lookException = (row) => {
-  const info = row.exception_info
+  const info = row.exception
   Modal.info({
     simple: false,
     width: tool.getDevice() === 'mobile' ? '100%' : '600px',
     title: '异常信息',
-    content: info == '' ? '无异常信息' : info,
+    content: info == null ? '无异常信息' : info,
   })
 }
 
@@ -67,7 +67,7 @@ const options = reactive({
   },
   delete: {
     show: true,
-    auth: ['/tool/crontab/deleteLog'],
+    auth: ['tool:crontab:batch-delete-logs'],
     func: async (params) => {
       const resp = await api.deleteLog(params)
       if (resp.code === 200) {
@@ -80,7 +80,7 @@ const options = reactive({
 
 // SaTable 列配置
 const columns = reactive([
-  { title: '执行时间', dataIndex: 'create_time', width: 180 },
+  { title: '执行时间', dataIndex: 'created_at', width: 180 },
   { title: '执行目标', dataIndex: 'target', width: 240 },
   { title: '执行结果', dataIndex: 'status', width: 100 },
 ])

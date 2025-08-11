@@ -16,7 +16,7 @@
         </a-col>
         <a-col :sm="8" :xs="24">
           <a-form-item field="status" label="状态">
-            <sa-select v-model="searchForm.status" dict="data_status" allow-clear placeholder="请选择状态" />
+            <sa-select v-model="searchForm.status" :options="StatusOptions" allow-clear placeholder="请选择状态" />
           </a-form-item>
         </a-col>
       </template>
@@ -30,11 +30,14 @@
       <template #status="{ record }">
         <sa-switch v-model="record.status" @change="changeStatus($event, record.id)"></sa-switch>
       </template>
+      <template #type="{ record }">
+        <span>{{ getTypes(record.type) }}</span>
+      </template>
 
       <!-- 操作前置扩展 -->
       <template #operationBeforeExtend="{ record }">
         <a-popconfirm content="确定立刻执行一次?" position="bottom" @ok="run(record)">
-          <a-link v-auth="['/tool/crontab/run']"><icon-caret-right /> 执行一次</a-link>
+          <a-link v-auth="['tool:crontab:run']"><icon-caret-right /> 执行一次</a-link>
         </a-popconfirm>
         <a-link @click="openLogModal(record)"><icon-history /> 日志 </a-link>
       </template>
@@ -60,6 +63,10 @@ const crudRef = ref()
 const editRef = ref()
 const logsRef = ref()
 
+const StatusOptions = [
+  { label: '启用', value: 1 },
+  { label: '禁用', value: 2 },
+]
 // 搜索表单
 const searchForm = ref({
   name: '',
@@ -74,6 +81,9 @@ const types = [
   { label: 'URL任务GET', value: 'url' },
   { label: '类任务', value: 'class' },
 ]
+const getTypes = (type) => {
+  return types.find((item) => item.value === type)?.label || '未知类型'
+}
 
 // 修改状态
 const changeStatus = async (status, id) => {
@@ -105,14 +115,14 @@ const options = reactive({
   operationColumnWidth: 280,
   add: {
     show: true,
-    auth: ['/tool/crontab/save'],
+    auth: ['tool:crontab:store'],
     func: async () => {
       editRef.value?.open()
     },
   },
   edit: {
     show: true,
-    auth: ['/tool/crontab/update'],
+    auth: ['tool:crontab:update'],
     func: async (record) => {
       editRef.value?.open('edit')
       editRef.value?.setFormData(record)
@@ -120,7 +130,7 @@ const options = reactive({
   },
   delete: {
     show: true,
-    auth: ['/tool/crontab/destroy'],
+    auth: ['tool:crontab:batch-delete'],
     func: async (params) => {
       const resp = await api.destroy(params)
       if (resp.code === 200) {
@@ -134,7 +144,7 @@ const options = reactive({
 // SaTable 列配置
 const columns = reactive([
   { title: '任务名称', dataIndex: 'name', width: 180 },
-  { title: '任务类型', dataIndex: 'type', type: 'dict', options: types, width: 140 },
+  { title: '任务类型', dataIndex: 'type', width: 140 },
   { title: '定时规则', dataIndex: 'rule', width: 260 },
   { title: '调用目标', dataIndex: 'target', width: 260 },
   { title: '状态', dataIndex: 'status', dict: 'data_status', width: 120 },
