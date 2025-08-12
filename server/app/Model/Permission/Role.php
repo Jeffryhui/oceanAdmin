@@ -40,4 +40,9 @@ class Role extends Model
     {
         return $this->belongsToMany(Menu::class, 'role_menu', 'role_id', 'menu_id');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(SystemUser::class, 'user_role', 'role_id', 'system_user_id');
+    }
 }

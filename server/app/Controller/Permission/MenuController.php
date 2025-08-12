@@ -83,14 +83,8 @@ class MenuController extends CrudController
     {
         $ids = $this->request->post('ids',[]);
         try {
-            foreach($ids as $id){
-                // 判断是否存在子菜单
-                $child = Menu::query()->where('parent_id', $id)->first();
-                if($child){
-                    return Response::error(sprintf('菜单%s存在子菜单，不能删除', $child->name));
-                }
-                $this->service->delete($id);
-            }
+            // 删除菜单和子菜单对应的角色关联
+            $this->service->batchDelete($ids);
             // 菜单删除后清理所有用户的菜单缓存
             $this->cacheService->clearMenuCache();
             return Response::success(['ids' => $ids], '批量删除成功');

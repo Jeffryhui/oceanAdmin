@@ -43,4 +43,25 @@ class Menu extends Model
      * The attributes that should be cast to native types.
      */
     protected array $casts = ['id' => 'integer', 'parent_id' => 'integer', 'is_hidden' => 'integer', 'is_layout' => 'integer', 'generate_id' => 'integer', 'status' => 'integer', 'sort' => 'integer', 'created_at' => 'datetime', 'updated_at' => 'datetime'];
+
+    /**
+     * 菜单与角色的多对多关联
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_menu', 'menu_id', 'role_id');
+    }
+
+    /**
+     * 获取所有子菜单ID（包括自己）
+     */
+    public function getAllChildrenIds(): array
+    {
+        $ids = [$this->id];
+        $children = self::where('parent_id', $this->id)->get();
+        foreach ($children as $child) {
+            $ids = array_merge($ids, $child->getAllChildrenIds());
+        }
+        return $ids;
+    }
 }

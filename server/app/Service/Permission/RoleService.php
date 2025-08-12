@@ -9,6 +9,7 @@ use App\Service\IService;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
 use FriendsOfHyperf\Cache\Contract\Repository as CacheInterface;
+use Hyperf\DbConnection\Db;
 use Hyperf\Di\Annotation\Inject;
 
 class RoleService extends BaseService implements IService
@@ -81,7 +82,7 @@ class RoleService extends BaseService implements IService
     public function clearRoleUsersCache(int $roleId)
     {
         // 获取拥有该角色的所有用户
-        $userIds = \Hyperf\DbConnection\Db::table('user_role')
+        $userIds = Db::table('user_role')
             ->where('role_id', $roleId)
             ->pluck('system_user_id')
             ->toArray();
@@ -90,5 +91,32 @@ class RoleService extends BaseService implements IService
         foreach ($userIds as $userId) {
             $this->deleteUserRoleCodeCache($userId);
         }
+    }
+
+    public function batchDelete(array $ids): int
+    {
+        // 开启事务
+        return Db::transaction(function() use ($ids) {
+            // 查找要删除的角色
+            $roles = $this->model->whereIn('id', $ids)->get();
+            /**
+             * @var Role $role
+             */
+            foreach ($roles as $role) {
+                // 清理角色的用户缓存
+                $this->clearRoleUsersCache($role->id);
+                
+                // 删除角色和用户的关联关系
+                $role->users()->detach();
+                
+                // 删除角色和菜单的关联关系
+                $role->menus()->detach();
+                
+                // 删除角色本身
+                $role->delete();
+            }
+            
+            return count($roles);
+        });
     }
 }

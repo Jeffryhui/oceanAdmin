@@ -8,6 +8,7 @@ use App\Service\BaseService;
 use App\Service\IService;
 use Hyperf\Di\Annotation\Inject;
 use FriendsOfHyperf\Cache\Contract\Repository as CacheInterface;
+use Hyperf\DbConnection\Db;
 
 class MenuService extends BaseService implements IService
 {
@@ -22,6 +23,40 @@ class MenuService extends BaseService implements IService
         $this->model = $model;
     }
 
+    /**
+     * 批量删除菜单
+     * @param array $ids 要删除的菜单ID数组
+     * @return int 删除的记录数
+     */
+    public function batchDelete(array $ids): int
+    {
+        return Db::transaction(function() use ($ids) {
+            // 获取所有要删除的菜单，包括子菜单
+            $allMenus = $this->model->whereIn('id', $ids)->get();
+            $allMenuIds = [];
+            
+            // 收集所有要删除的菜单ID（包括子菜单）
+            foreach ($allMenus as $menu) {
+                $allMenuIds = array_merge($allMenuIds, $menu->getAllChildrenIds());
+            }
+            $allMenuIds = array_unique($allMenuIds);
+            
+            // 获取所有受影响的菜单实例
+            $menus = $this->model->whereIn('id', $allMenuIds)->get();
+            
+            // 删除每个菜单及其关联
+            foreach ($menus as $menu) {
+                // 删除菜单与角色的关联关系
+                $menu->roles()->detach();
+                
+                // 删除菜单
+                $menu->delete();
+            }
+            
+            return count($menus);
+        });
+    }
+    
     /**
      * 获取用户对应的菜单code
      * @param int $userId

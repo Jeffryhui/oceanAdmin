@@ -76,7 +76,12 @@ class RoleController extends CrudController
     #[Auth('admin')]
     public function batchDelete()
     {
-        return parent::batchDelete();
+        $ids = $this->request->post('ids',[]);
+        $result = $this->service->batchDelete($ids);
+        if($result){
+            return Response::success(['ids' => $ids], '批量删除成功');
+        }
+        return Response::error('批量删除失败');
     }
 
 

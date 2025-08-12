@@ -6,6 +6,7 @@ use App\Exception\BusinessException;
 use App\Model\Permission\SystemUser;
 use App\Service\BaseService;
 use App\Service\IService;
+use Hyperf\DbConnection\Db;
 use HyperfExtension\Hashing\Hash;
 
 class SystemUserService extends BaseService implements IService
@@ -104,10 +105,28 @@ class SystemUserService extends BaseService implements IService
     public function initPassword(int $id)
     {
         $user = $this->model->find($id);
-        if(empty($user)){
+        if (empty($user)) {
             throw new BusinessException('用户不存在');
         }
         $user->password = Hash::make('123456');
         return $user->save();
+    }
+
+    public function batchDelete(array $ids): int
+    {
+        return Db::transaction(function () use ($ids) {
+            $users = $this->model->whereIn('id', $ids)->get();
+            /**
+             * @var SystemUser $user
+             */
+            foreach ($users as $user) {
+                // 删除用户与角色的关联关系
+                $user->roles()->detach();
+                // 删除用户
+                $user->delete();
+            }
+            return count($ids);
+        });
+
     }
 }
